@@ -1,75 +1,361 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>投标导航 | 招投标网站管理 + 可靠分片云端备份</title>
+    <title>随心导航 | 自定义网站导航</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <style>
-        * { margin:0; padding:0; box-sizing: border-box; font-family: system-ui, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif; }
-        body { background: #f0f4f8; padding: 24px 20px 48px; }
+        * { margin:0; padding:0; box-sizing: border-box; font-family: system-ui, 'Segoe UI', 'Roboto', 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+        /* 简洁大方护眼配色 — 秋香色背景 + 灰青色文字 + 风霁蓝点缀 */
+        body { 
+            background: #D4B683;  /* 秋香色背景 */
+            padding: 24px 20px 48px;
+        }
         .container { max-width: 1400px; margin: 0 auto; }
-        .top-header { background: white; border-radius: 28px; padding: 18px 28px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #e9edf2; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
+        .top-header { 
+            background: #FEF9F0; 
+            border-radius: 28px; 
+            padding: 18px 28px; 
+            margin-bottom: 24px; 
+            border: 1px solid #E2D5C0; 
+            display: flex; 
+            flex-wrap: wrap; 
+            align-items: center; 
+            justify-content: space-between; 
+            gap: 16px; 
+        }
         .logo-area { display: flex; align-items: baseline; gap: 12px; }
-        .logo { font-size: 1.6rem; font-weight: 600; background: linear-gradient(135deg, #1e3c72, #2a5298); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .date-area { font-size: 0.85rem; color: #5b6e8c; background: #f8fafd; padding: 6px 14px; border-radius: 40px; }
-        .search-engine { display: flex; align-items: center; gap: 8px; background: #f8fafd; padding: 5px 12px; border-radius: 60px; border: 1px solid #e2e8f0; }
-        .search-engine select { border: none; background: transparent; font-size: 0.85rem; font-weight: 500; color: #1e3a5f; cursor: pointer; outline: none; }
-        .search-engine input { border: none; background: transparent; padding: 8px 0; width: 200px; font-size: 0.9rem; outline: none; }
-        .search-engine button { background: #1e3c72; border: none; color: white; padding: 6px 16px; border-radius: 40px; font-weight: 500; cursor: pointer; transition: 0.2s; }
-        .search-engine button:hover { background: #0f2b52; }
+        .logo { 
+            font-size: 1.6rem; 
+            font-weight: 600; 
+            background: linear-gradient(135deg, #3B5C3B, #6F848C); 
+            -webkit-background-clip: text; 
+            background-clip: text; 
+            color: transparent; 
+        }
+        .date-area { 
+            font-size: 0.85rem; 
+            color: #6B5E4A; 
+            background: #F4EDE2; 
+            padding: 6px 14px; 
+            border-radius: 40px; 
+        }
+        .search-engine { 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            background: #F4EDE2; 
+            padding: 5px 12px; 
+            border-radius: 60px; 
+            border: 1px solid #E2D5C0; 
+        }
+        .search-engine select { 
+            border: none; 
+            background: transparent; 
+            font-size: 0.85rem; 
+            font-weight: 500; 
+            color: #4A5A4A; 
+            cursor: pointer; 
+            outline: none; 
+        }
+        .search-engine input { 
+            border: none; 
+            background: transparent; 
+            padding: 8px 0; 
+            width: 200px; 
+            font-size: 0.9rem; 
+            outline: none; 
+            color: #2C3E3F;
+        }
+        .search-engine input::placeholder { color: #A8987A; }
+        .search-engine button { 
+            background: #6F848C; 
+            border: none; 
+            color: white; 
+            padding: 6px 16px; 
+            border-radius: 40px; 
+            font-weight: 500; 
+            cursor: pointer; 
+            transition: 0.2s; 
+        }
+        .search-engine button:hover { background: #5B727A; }
         .action-buttons { display: flex; gap: 12px; }
-        .btn-outline { background: white; border: 1px solid #cfdfed; padding: 8px 16px; border-radius: 40px; font-size: 0.85rem; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
-        .btn-outline:hover { background: #eef3fc; border-color: #2a7faa; }
-        .add-section { background: white; border-radius: 24px; padding: 20px 24px; margin-bottom: 28px; border: 1px solid #e9edf2; }
-        .form-row { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; }
-        .input-group { flex: 2; min-width: 200px; }
-        .input-group label { font-size: 0.7rem; font-weight: 600; color: #2c6280; margin-bottom: 6px; display: block; }
-        .input-group input { width: 100%; padding: 10px 14px; border-radius: 16px; border: 1px solid #cfdfed; background: #ffffff; font-size: 0.9rem; outline: none; }
-        .input-group input:focus { border-color: #2a7faa; box-shadow: 0 0 0 3px rgba(42,127,170,0.1); }
-        .btn-primary { background: #1e3c72; border: none; color: white; padding: 10px 20px; border-radius: 40px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
-        .btn-primary:hover { background: #0f2b52; transform: translateY(-1px); }
-        .btn-secondary { background: #eef2f8; border: 1px solid #cfdfed; padding: 10px 18px; border-radius: 40px; font-weight: 500; cursor: pointer; }
-        .search-locate { margin-bottom: 20px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; background: white; padding: 12px 20px; border-radius: 60px; border: 1px solid #e9edf2; }
+        .btn-outline { 
+            background: #FEF9F0; 
+            border: 1px solid #DCCFBB; 
+            padding: 8px 16px; 
+            border-radius: 40px; 
+            font-size: 0.85rem; 
+            font-weight: 500; 
+            cursor: pointer; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 6px; 
+            color: #4A5A4A;
+            transition: 0.2s; 
+        }
+        .btn-outline:hover { 
+            background: #EDE3D4; 
+            border-color: #A8987A; 
+            color: #3B5C3B;
+        }
+        .search-locate { 
+            margin-bottom: 20px; 
+            display: flex; 
+            gap: 12px; 
+            align-items: center; 
+            flex-wrap: wrap; 
+            background: #FEF9F0; 
+            padding: 12px 20px; 
+            border-radius: 60px; 
+            border: 1px solid #E2D5C0; 
+        }
         .search-locate .search-input { flex: 1; min-width: 180px; }
-        .search-locate input { width: 100%; padding: 8px 16px; border-radius: 40px; border: 1px solid #cfdfed; font-size: 0.85rem; outline: none; }
-        .search-locate button { background: #eef2f8; border: none; padding: 8px 20px; border-radius: 40px; cursor: pointer; font-weight: 500; }
+        .search-locate input { 
+            width: 100%; 
+            padding: 8px 16px; 
+            border-radius: 40px; 
+            border: 1px solid #DCCFBB; 
+            background: #FFFFFF; 
+            font-size: 0.85rem; 
+            outline: none; 
+            color: #2C3E3F;
+        }
+        .search-locate input:focus { border-color: #6F848C; }
+        .search-locate button { 
+            background: #F4EDE2; 
+            border: none; 
+            padding: 8px 20px; 
+            border-radius: 40px; 
+            cursor: pointer; 
+            font-weight: 500; 
+            color: #4A5A4A;
+        }
+        .search-locate button:hover { background: #EDE3D4; color: #3B5C3B; }
         .sort-buttons { display: flex; gap: 8px; margin-left: auto; }
-        .sort-btn { background: white; border: 1px solid #cfdfed; padding: 6px 14px; border-radius: 40px; font-size: 0.8rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
-        .sort-btn.active { background: #1e3c72; color: white; border-color: #1e3c72; }
-        .sort-btn:hover { background: #eef3fc; border-color: #2a7faa; }
-        .backup-section { background: white; border-radius: 24px; padding: 18px 24px; margin-bottom: 28px; border: 1px solid #e9edf2; display: flex; flex-wrap: wrap; align-items: center; gap: 16px; justify-content: space-between; }
-        .cloud-backup { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; background: #f8fafc; padding: 8px 16px; border-radius: 60px; }
-        .cloud-backup input { border: 1px solid #cfdfed; border-radius: 40px; padding: 8px 12px; font-size: 0.85rem; width: 200px; outline: none; }
-        .cloud-backup button, .local-backup button { background: white; border: 1px solid #cfdfed; padding: 6px 14px; border-radius: 40px; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
-        .cloud-backup button:hover, .local-backup button:hover { background: #eef3fc; border-color: #2a7faa; }
+        .sort-btn { 
+            background: #FEF9F0; 
+            border: 1px solid #DCCFBB; 
+            padding: 6px 14px; 
+            border-radius: 40px; 
+            font-size: 0.8rem; 
+            cursor: pointer; 
+            transition: 0.2s; 
+            display: flex; 
+            align-items: center; 
+            gap: 6px; 
+            color: #4A5A4A;
+        }
+        .sort-btn.active { 
+            background: #6F848C; 
+            color: white; 
+            border-color: #6F848C; 
+        }
+        .sort-btn:hover { 
+            background: #EDE3D4; 
+            border-color: #A8987A; 
+        }
+        /* 备份区域（底部） */
+        .backup-section { 
+            background: #FEF9F0; 
+            border-radius: 24px; 
+            padding: 18px 24px; 
+            margin-top: 28px; 
+            border: 1px solid #E2D5C0; 
+            display: flex; 
+            flex-wrap: wrap; 
+            align-items: center; 
+            gap: 16px; 
+            justify-content: space-between; 
+        }
+        .cloud-backup { 
+            display: flex; 
+            align-items: center; 
+            flex-wrap: wrap; 
+            gap: 12px; 
+            background: #F4EDE2; 
+            padding: 8px 16px; 
+            border-radius: 60px; 
+        }
+        .cloud-backup input { 
+            border: 1px solid #DCCFBB; 
+            border-radius: 40px; 
+            padding: 8px 12px; 
+            font-size: 0.85rem; 
+            width: 200px; 
+            outline: none; 
+            background: white; 
+            color: #2C3E3F;
+        }
+        .cloud-backup input:focus { border-color: #6F848C; }
+        .cloud-backup button, .local-backup button { 
+            background: white; 
+            border: 1px solid #DCCFBB; 
+            padding: 6px 14px; 
+            border-radius: 40px; 
+            cursor: pointer; 
+            font-size: 0.8rem; 
+            transition: 0.2s; 
+            color: #4A5A4A;
+        }
+        .cloud-backup button:hover, .local-backup button:hover { 
+            background: #EDE3D4; 
+            border-color: #A8987A; 
+            color: #3B5C3B;
+        }
         .local-backup { display: flex; gap: 12px; align-items: center; }
-        .random-key-btn { background: #eef2f8; border: none; padding: 6px 12px; border-radius: 30px; font-size: 0.7rem; cursor: pointer; }
+        .random-key-btn { 
+            background: #F4EDE2; 
+            border: none; 
+            padding: 6px 12px; 
+            border-radius: 30px; 
+            font-size: 0.7rem; 
+            cursor: pointer; 
+            color: #6B5E4A;
+        }
+        .random-key-btn:hover { background: #EDE3D4; }
         .edit-mode-bar { display: flex; gap: 12px; align-items: center; margin-left: auto; }
-        .edit-mode-btn, .delete-mode-btn { background: #1e3c72; color: white; border: none; padding: 8px 20px; border-radius: 40px; font-weight: 500; cursor: pointer; transition: 0.2s; }
-        .edit-mode-btn.active, .delete-mode-btn.active { background: #e03a3a; }
-        .sites-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 18px; margin-top: 12px; }
-        .card { background: white; border-radius: 20px; padding: 12px 16px; transition: all 0.2s; border: 1px solid #eef2f6; cursor: default; display: flex; align-items: center; justify-content: space-between; }
+        .edit-mode-btn, .delete-mode-btn { 
+            background: #6F848C; 
+            color: white; 
+            border: none; 
+            padding: 8px 20px; 
+            border-radius: 40px; 
+            font-weight: 500; 
+            cursor: pointer; 
+            transition: 0.2s; 
+        }
+        .edit-mode-btn:hover, .delete-mode-btn:hover { background: #5B727A; }
+        .edit-mode-btn.active, .delete-mode-btn.active { background: #C47B5E; }
+        .sites-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; margin-top: 12px; }
+        .card { 
+            background: #FEF9F0; 
+            border-radius: 20px; 
+            padding: 12px 16px; 
+            transition: all 0.2s; 
+            border: 1px solid #E2D5C0; 
+            cursor: default; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+        }
         .card.drag-enabled { cursor: grab; }
         .card.drag-enabled:active { cursor: grabbing; }
-        .card:hover { transform: translateY(-2px); box-shadow: 0 12px 20px -12px rgba(0,0,0,0.12); border-color: #cbdde9; }
-        .card.selected { background: #e3f2fd; border-color: #2a7faa; box-shadow: 0 0 0 2px #2a7faa inset; }
-        .card.highlight { background: #fff7e5; border-left: 4px solid #f5b042; }
-        .drag-handle { cursor: grab; color: #9aaebf; margin-right: 12px; font-size: 0.9rem; }
-        .card-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
-        .site-name-link { font-weight: 500; font-size: 0.85rem; color: #1e2f3e; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; cursor: pointer; }
-        .site-name-link:hover { color: #2a7faa; text-decoration: underline; }
-        .empty-state { text-align: center; padding: 56px 20px; background: white; border-radius: 32px; color: #8899b0; border: 1px dashed #cbdde9; }
-        .toast-msg { position: fixed; bottom: 24px; right: 24px; background: #1e2f41; color: white; padding: 10px 20px; border-radius: 40px; font-size: 0.85rem; z-index: 1000; opacity: 0; transition: 0.2s; pointer-events: none; }
+        .card:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 12px 20px -12px rgba(0,0,0,0.12); 
+            border-color: #BDB28A; 
+            background: #FFFDF5; 
+        }
+        .card.selected { 
+            background: #F4EDE2; 
+            border-color: #6F848C; 
+            box-shadow: 0 0 0 2px #6F848C inset; 
+        }
+        .card.highlight { background: #FFF0D6; border-left: 4px solid #C47B5E; }
+        .drag-handle { cursor: grab; color: #A8987A; font-size: 1rem; flex-shrink: 0; }
+        .site-name-link { 
+            font-weight: 700; 
+            font-size: 0.95rem; 
+            color: #2C3E3F; 
+            text-decoration: none; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            flex: 1;
+            min-width: 0;
+        }
+        .site-name-link:hover { color: #6F848C; text-decoration: underline; }
+        .empty-state { 
+            text-align: center; 
+            padding: 56px 20px; 
+            background: #FEF9F0; 
+            border-radius: 32px; 
+            color: #A8987A; 
+            border: 1px dashed #DCCFBB; 
+        }
+        .toast-msg { 
+            position: fixed; 
+            bottom: 24px; 
+            right: 24px; 
+            background: #2C3E3F; 
+            color: #FEF9F0; 
+            padding: 10px 20px; 
+            border-radius: 40px; 
+            font-size: 0.85rem; 
+            z-index: 1000; 
+            opacity: 0; 
+            transition: 0.2s; 
+            pointer-events: none; 
+        }
         .toast-msg.show { opacity: 1; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1050; }
-        .modal-content { background: white; border-radius: 32px; max-width: 460px; width: 90%; padding: 28px; }
+        /* 弹窗样式 */
+        .modal { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(44, 62, 63, 0.6); 
+            align-items: center; 
+            justify-content: center; 
+            z-index: 1050; 
+        }
+        .modal-content { 
+            background: #FEF9F0; 
+            border-radius: 32px; 
+            max-width: 480px; 
+            width: 90%; 
+            padding: 28px; 
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.2); 
+            border: 1px solid #E2D5C0; 
+        }
+        .modal-content .input-group { margin-bottom: 20px; }
+        .modal-content label { 
+            font-size: 0.75rem; 
+            font-weight: 600; 
+            color: #6B5E4A; 
+            display: block; 
+            margin-bottom: 6px; 
+        }
+        .modal-content input { 
+            width: 100%; 
+            padding: 10px 14px; 
+            border-radius: 16px; 
+            border: 1px solid #DCCFBB; 
+            background: #FFFFFF; 
+            font-size: 0.9rem; 
+            outline: none; 
+            color: #2C3E3F;
+        }
+        .modal-content input:focus { border-color: #6F848C; }
         .modal-buttons { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; }
+        .btn-secondary { 
+            background: #F4EDE2; 
+            border: 1px solid #DCCFBB; 
+            padding: 8px 18px; 
+            border-radius: 40px; 
+            font-weight: 500; 
+            cursor: pointer; 
+            color: #4A5A4A;
+        }
+        .btn-secondary:hover { background: #EDE3D4; color: #3B5C3B; }
+        .btn-primary { 
+            background: #6F848C; 
+            border: none; 
+            color: white; 
+            padding: 8px 20px; 
+            border-radius: 40px; 
+            font-weight: 500; 
+            cursor: pointer; 
+        }
+        .btn-primary:hover { background: #5B727A; }
         @media (max-width: 640px) {
             .top-header { flex-direction: column; align-items: stretch; }
             .sites-grid { grid-template-columns: 1fr; }
-            .site-name-link { max-width: 140px; }
             .backup-section { flex-direction: column; align-items: stretch; }
             .cloud-backup, .local-backup { justify-content: space-between; }
             .edit-mode-bar { margin-left: 0; }
@@ -81,7 +367,7 @@
 <body>
 <div class="container">
     <div class="top-header">
-        <div class="logo-area"><div class="logo"><i class="fas fa-gavel"></i> 投标·导航仪</div><div class="date-area" id="liveDate"></div></div>
+        <div class="logo-area"><div class="logo"><i class="fas fa-gavel"></i> 投标·导航</div><div class="date-area" id="liveDate"></div></div>
         <div class="search-engine">
             <select id="engineSelect"><option value="baidu">百度</option><option value="bing">必应</option><option value="google">谷歌</option></select>
             <input type="text" id="searchKeywordEngine" placeholder="搜索招标资讯...">
@@ -90,38 +376,8 @@
         <div class="action-buttons">
             <label class="btn-outline" for="importFileInput"><i class="fas fa-upload"></i> 导入收藏夹</label>
             <input type="file" id="importFileInput" accept=".htm,.html" style="display: none;">
+            <button id="openAddSiteModalBtn" class="btn-outline"><i class="fas fa-plus-circle"></i> 添加网站</button>
             <button id="resetExampleBtn" class="btn-outline"><i class="fas fa-database"></i> 重置示例</button>
-        </div>
-    </div>
-
-    <div class="add-section">
-        <div style="font-weight:600; margin-bottom:12px;"><i class="fas fa-plus-circle"></i> 自定义添加投标网站</div>
-        <div class="form-row">
-            <div class="input-group"><label>网址 URL *</label><input type="text" id="addUrl" placeholder="https://hsggzy.hengshui.gov.cn/"></div>
-            <div class="input-group"><label>网站名称 (可自动获取)</label><input type="text" id="addName" placeholder="自动获取或手动填写"></div>
-            <div><button id="fetchInfoBtn" class="btn-secondary"><i class="fas fa-magic"></i> 获取信息</button><button id="addSiteBtn" class="btn-primary"><i class="fas fa-save"></i> 添加网站</button></div>
-        </div>
-        <div style="font-size:0.7rem; color:#6b8aae; margin-top:8px;"><i class="fas fa-lightbulb"></i> 输入网址后点击“获取信息”→ 自动抓取网页标题作为名称</div>
-    </div>
-
-    <!-- 备份区域 + 编辑/删除控制按钮 -->
-    <div class="backup-section">
-        <div class="cloud-backup">
-            <i class="fas fa-cloud-upload-alt"></i>
-            <input type="text" id="cloudKey" placeholder="主KEY (6-60位, 如 JSTTK20260428ZDGS)" maxlength="60">
-            <button id="backupToCloudBtn"><i class="fas fa-upload"></i> 分片备份到云端</button>
-            <button id="restoreFromCloudBtn"><i class="fas fa-download"></i> 从云端分片恢复</button>
-            <button id="genRandomKeyBtn" class="random-key-btn" title="生成随机KEY"><i class="fas fa-dice-d6"></i> 随机KEY</button>
-        </div>
-        <div class="local-backup">
-            <i class="fas fa-hdd"></i>
-            <button id="backupToLocalBtn"><i class="fas fa-file-download"></i> 备份到本地</button>
-            <button id="restoreFromLocalBtn"><i class="fas fa-file-upload"></i> 从本地恢复</button>
-            <input type="file" id="localRestoreFile" accept=".json" style="display: none;">
-        </div>
-        <div class="edit-mode-bar">
-            <button id="editModeBtn" class="edit-mode-btn">编辑</button>
-            <button id="deleteModeBtn" class="delete-mode-btn">删除</button>
         </div>
     </div>
 
@@ -138,10 +394,54 @@
         </div>
     </div>
 
+    <!-- 网站卡片列表 -->
     <div id="sitesGridContainer" class="sites-grid"></div>
+
+    <!-- 备份区域移至底部 -->
+    <div class="backup-section">
+        <div class="cloud-backup">
+            <i class="fas fa-cloud-upload-alt" style="color:#6F848C;"></i>
+            <input type="text" id="cloudKey" placeholder="主KEY (6-60位, 如 JSTTK20260428ZDGS)" maxlength="60">
+            <button id="backupToCloudBtn"><i class="fas fa-upload"></i> 分片备份到云端</button>
+            <button id="restoreFromCloudBtn"><i class="fas fa-download"></i> 从云端分片恢复</button>
+            <button id="genRandomKeyBtn" class="random-key-btn" title="生成随机KEY"><i class="fas fa-dice-d6"></i> 随机KEY</button>
+        </div>
+        <div class="local-backup">
+            <i class="fas fa-hdd" style="color:#6F848C;"></i>
+            <button id="backupToLocalBtn"><i class="fas fa-file-download"></i> 备份到本地</button>
+            <button id="restoreFromLocalBtn"><i class="fas fa-file-upload"></i> 从本地恢复</button>
+            <input type="file" id="localRestoreFile" accept=".json" style="display: none;">
+        </div>
+        <div class="edit-mode-bar">
+            <button id="editModeBtn" class="edit-mode-btn">编辑</button>
+            <button id="deleteModeBtn" class="delete-mode-btn">删除</button>
+        </div>
+    </div>
 </div>
 
-<div id="editModal" class="modal"><div class="modal-content"><h3><i class="fas fa-pen-alt"></i> 编辑站点</h3><div class="input-group" style="margin-bottom:18px;"><label>网站名称</label><input type="text" id="editName" placeholder="名称"></div><div class="input-group" style="margin-bottom:18px;"><label>网址 URL</label><input type="text" id="editUrl" placeholder="https://..."></div><div class="modal-buttons"><button id="closeModalBtn" class="btn-secondary">取消</button><button id="saveEditBtn" class="btn-primary">保存修改</button></div></div></div>
+<!-- 添加网站弹窗 -->
+<div id="addSiteModal" class="modal">
+    <div class="modal-content">
+        <h3 style="margin-bottom: 20px; color:#2C3E3F;"><i class="fas fa-plus-circle" style="color:#6F848C;"></i> 自定义添加投标网站</h3>
+        <div class="input-group">
+            <label>网址 URL *</label>
+            <input type="text" id="modalAddUrl" placeholder="https://hsggzy.hengshui.gov.cn/">
+        </div>
+        <div class="input-group">
+            <label>网站名称 (可自动获取)</label>
+            <input type="text" id="modalAddName" placeholder="自动获取或手动填写">
+        </div>
+        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <button id="modalFetchInfoBtn" class="btn-secondary"><i class="fas fa-magic"></i> 获取信息</button>
+        </div>
+        <div class="modal-buttons">
+            <button id="closeModalBtn" class="btn-secondary">取消</button>
+            <button id="modalAddSiteBtn" class="btn-primary">添加网站</button>
+        </div>
+    </div>
+</div>
+
+<div id="editModal" class="modal"><div class="modal-content"><h3 style="color:#2C3E3F;"><i class="fas fa-pen-alt" style="color:#6F848C;"></i> 编辑站点</h3><div class="input-group" style="margin-bottom:18px;"><label>网站名称</label><input type="text" id="editName" placeholder="名称"></div><div class="input-group" style="margin-bottom:18px;"><label>网址 URL</label><input type="text" id="editUrl" placeholder="https://..."></div><div class="modal-buttons"><button id="closeEditModalBtn" class="btn-secondary">取消</button><button id="saveEditBtn" class="btn-primary">保存修改</button></div></div></div>
 <div id="toastMsg" class="toast-msg"></div>
 
 <script>
@@ -156,7 +456,8 @@
     let editMode = false;
     let deleteMode = false;
     let selectedIds = new Set();
-    let currentSort = 'name';
+    // 默认排序改为使用频率 (降序)
+    let currentSort = 'frequency';
     let clickCounts = {};
 
     // ---------- 辅助函数 ----------
@@ -208,7 +509,7 @@
     }
     function applySortAndRender() { sortSitesBy(currentSort); renderSites(); }
 
-    // 自动获取标题 (略)
+    // 自动获取标题
     async function fetchWebsiteTitleFromUrl(rawUrl) {
         let fullUrl = rawUrl.trim();
         if (!fullUrl) return null;
@@ -229,26 +530,29 @@
             try { return new URL(fullUrl).hostname.replace(/^www\./, ''); } catch(e) { return null; }
         }
     }
-    async function autoFillByUrl() {
-        const urlInput = document.getElementById('addUrl');
+
+    // 弹窗中的获取信息
+    async function modalAutoFill() {
+        const urlInput = document.getElementById('modalAddUrl');
         let url = urlInput.value.trim();
         if (!url) { showToast('请输入网址', 1500); return; }
         if (!url.startsWith('http')) url = 'https://' + url;
         urlInput.value = url;
-        const btn = document.getElementById('fetchInfoBtn');
+        const btn = document.getElementById('modalFetchInfoBtn');
         const original = btn.innerHTML;
         btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> 获取中...';
         btn.disabled = true;
         try {
             const title = await fetchWebsiteTitleFromUrl(url);
-            if (title) { document.getElementById('addName').value = title; showToast(`✅ 获取成功: ${title.substring(0,40)}`, 2000); }
-            else { let domain = new URL(url).hostname.replace(/^www\./, ''); document.getElementById('addName').value = domain || '未命名'; showToast(`⚠️ 使用域名作为名称`, 2000); }
+            if (title) { document.getElementById('modalAddName').value = title; showToast(`✅ 获取成功: ${title.substring(0,40)}`, 2000); }
+            else { let domain = new URL(url).hostname.replace(/^www\./, ''); document.getElementById('modalAddName').value = domain || '未命名'; showToast(`⚠️ 使用域名作为名称`, 2000); }
         } catch(e) { showToast('获取失败，请手动输入', 1800); }
         finally { btn.innerHTML = original; btn.disabled = false; }
     }
-    async function addSite() {
-        let url = document.getElementById('addUrl').value.trim();
-        let name = document.getElementById('addName').value.trim();
+
+    async function addSiteFromModal() {
+        let url = document.getElementById('modalAddUrl').value.trim();
+        let name = document.getElementById('modalAddName').value.trim();
         if (!url) { showToast('请填写网址', 1200); return; }
         if (!url.startsWith('http')) url = 'https://' + url;
         if (!name) {
@@ -261,11 +565,20 @@
         sites.push({ id: newId, name: name.substring(0,100), url });
         saveToLocal();
         applySortAndRender();
-        document.getElementById('addUrl').value = '';
-        document.getElementById('addName').value = '';
+        document.getElementById('modalAddUrl').value = '';
+        document.getElementById('modalAddName').value = '';
+        closeAddModal();
         showToast(`✨ 已添加 ${name}`, 1500);
     }
 
+    function openAddModal() {
+        document.getElementById('addSiteModal').style.display = 'flex';
+        document.getElementById('modalAddUrl').value = '';
+        document.getElementById('modalAddName').value = '';
+    }
+    function closeAddModal() { document.getElementById('addSiteModal').style.display = 'none'; }
+
+    // 编辑站点
     function openEditModalById(id) {
         const site = sites.find(s => s.id === id);
         if (!site) return;
@@ -289,11 +602,11 @@
             applySortAndRender();
             showToast('修改成功', 1200);
         }
-        closeModal();
+        closeEditModal();
     }
-    function closeModal() { document.getElementById('editModal').style.display = 'none'; editId = null; }
+    function closeEditModal() { document.getElementById('editModal').style.display = 'none'; editId = null; }
 
-    // 删除模式 (需求: 有选中时按钮显示"确认删除"，无选中时显示"取消删除"，点击后行为正确)
+    // 删除模式
     function enterDeleteMode() {
         if (editMode) exitEditMode();
         deleteMode = true;
@@ -387,17 +700,13 @@
     function renderSitesWithMode() {
         const container = document.getElementById('sitesGridContainer');
         if (!container) return;
-        if (sites.length === 0) { container.innerHTML = `<div class="empty-state"><i class="fas fa-folder-open"></i><p>暂无站点，点击上方添加或导入收藏夹</p></div>`; return; }
+        if (sites.length === 0) { container.innerHTML = `<div class="empty-state"><i class="fas fa-folder-open"></i><p>暂无站点，点击上方「添加网站」或导入收藏夹</p></div>`; return; }
         let html = '';
         sites.forEach(site => {
             const selectedClass = (deleteMode && selectedIds.has(site.id)) ? 'selected' : '';
             html += `<div class="card ${selectedClass}" data-id="${site.id}">
-                        <div style="display:flex; align-items:center; flex:1; min-width:0;">
-                            <i class="fas fa-grip-vertical drag-handle"></i>
-                            <div class="card-left">
-                                <a href="${escapeHtml(site.url)}" target="_blank" rel="noopener noreferrer" class="site-name-link" data-id="${site.id}" data-url="${escapeHtml(site.url)}" title="访问 ${escapeHtml(site.name)}">${escapeHtml(site.name)}</a>
-                            </div>
-                        </div>
+                        <i class="fas fa-grip-vertical drag-handle"></i>
+                        <a href="${escapeHtml(site.url)}" target="_blank" rel="noopener noreferrer" class="site-name-link" data-id="${site.id}" data-url="${escapeHtml(site.url)}" title="访问 ${escapeHtml(site.name)}">${escapeHtml(site.name)}</a>
                     </div>`;
         });
         container.innerHTML = html;
@@ -507,18 +816,16 @@
         input.addEventListener('keypress', e => { if (e.key === 'Enter') btn.click(); });
     }
 
-    // ========== 云端备份/恢复核心 (完全参照附件稳定实现) ==========
-    const MAX_VALUE_SIZE = 200000; // 20万字符上限
-    // 写入单条记录 (严格参照附件 writeToCloud)
+    // ========== 云端备份/恢复核心 ==========
+    const MAX_VALUE_SIZE = 200000;
     async function writeTextDB(key, value) {
         const url = `https://textdb.online/update/?key=${encodeURIComponent(key)}&value=${encodeURIComponent(value)}`;
         const resp = await fetch(url, { method: 'POST' });
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
         const json = await resp.json();
-        if (json.status !== 1) throw new Error(`API返回失败: ${JSON.stringify(json)}`);
+        if (json.status !== 1) throw new Error(`API返回失败`);
         return json;
     }
-    // 读取单条记录
     async function readTextDB(key) {
         const resp = await fetch(`https://textdb.online/${encodeURIComponent(key)}`, { method: 'GET' });
         if (!resp.ok) return null;
@@ -526,7 +833,6 @@
         return text || null;
     }
 
-    // 分片备份 (自动判断是否需要分片，完全参照附件思路)
     async function backupToCloud() {
         const masterKey = document.getElementById('cloudKey').value.trim();
         if (!/^[0-9a-zA-Z\-_]{6,60}$/.test(masterKey)) {
@@ -541,9 +847,7 @@
         backupBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> 分片备份中...';
         try {
             if (totalLen <= MAX_VALUE_SIZE) {
-                // 小数据直接存主KEY，并清除可能残留的分片
                 await writeTextDB(masterKey, dataStr);
-                // 尝试删除旧分片（避免残留）
                 try {
                     const oldMeta = await readTextDB(masterKey);
                     if (oldMeta && oldMeta.startsWith('{"batches":')) {
@@ -557,12 +861,9 @@
                 } catch(e) {}
                 showToast(`✅ 云端备份成功 (单片)`, 2000);
             } else {
-                // 分片策略: 每片最多 180000 字符（留余量）
                 const CHUNK_SIZE = 180000;
                 const batchCount = Math.ceil(totalLen / CHUNK_SIZE);
-                // 写入主KEY元数据
                 await writeTextDB(masterKey, JSON.stringify({ batches: batchCount }));
-                // 分片写入
                 for (let i = 0; i < batchCount; i++) {
                     const start = i * CHUNK_SIZE;
                     const end = Math.min(start + CHUNK_SIZE, totalLen);
@@ -574,14 +875,13 @@
         } catch (err) {
             console.error(err);
             showToast(`❌ 云端备份失败: ${err.message}，已自动转为本地备份`, 4000);
-            backupToLocal(); // fallback 本地备份
+            backupToLocal();
         } finally {
             backupBtn.disabled = false;
             backupBtn.innerHTML = originalText;
         }
     }
 
-    // 从云端分片恢复
     async function restoreFromCloud() {
         const masterKey = document.getElementById('cloudKey').value.trim();
         if (!/^[0-9a-zA-Z\-_]{6,60}$/.test(masterKey)) {
@@ -594,12 +894,8 @@
         restoreBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> 分片恢复中...';
         try {
             const masterData = await readTextDB(masterKey);
-            if (!masterData || masterData.trim() === '') {
-                showToast('云端无数据或KEY不存在', 3000);
-                return;
-            }
+            if (!masterData) { showToast('云端无数据或KEY不存在', 3000); return; }
             let fullData = '';
-            // 尝试解析元数据
             if (masterData.trim().startsWith('{') && masterData.includes('"batches"')) {
                 let meta;
                 try { meta = JSON.parse(masterData); } catch(e) { meta = null; }
@@ -612,12 +908,8 @@
                         chunks.push(chunk);
                     }
                     fullData = chunks.join('');
-                } else {
-                    fullData = masterData;
-                }
-            } else {
-                fullData = masterData;
-            }
+                } else fullData = masterData;
+            } else fullData = masterData;
             if (!fullData) throw new Error('数据为空');
             const parsed = JSON.parse(fullData);
             if (!Array.isArray(parsed)) throw new Error('数据格式不是数组');
@@ -629,7 +921,6 @@
             }
         } catch (err) {
             showToast(`恢复失败: ${err.message}`, 4000);
-            console.error(err);
         } finally {
             restoreBtn.disabled = false;
             restoreBtn.innerHTML = originalText;
@@ -681,21 +972,24 @@
     setInterval(updateDate, 60000); updateDate();
 
     function bindEvents() {
-        document.getElementById('addSiteBtn').addEventListener('click', addSite);
-        document.getElementById('fetchInfoBtn').addEventListener('click', autoFillByUrl);
+        // 添加网站弹窗
+        document.getElementById('openAddSiteModalBtn').addEventListener('click', openAddModal);
+        document.getElementById('closeModalBtn').addEventListener('click', closeAddModal);
+        document.getElementById('modalAddSiteBtn').addEventListener('click', addSiteFromModal);
+        document.getElementById('modalFetchInfoBtn').addEventListener('click', modalAutoFill);
+        window.addEventListener('click', (e) => { if (e.target === document.getElementById('addSiteModal')) closeAddModal(); });
+        // 编辑弹窗
+        document.getElementById('closeEditModalBtn').addEventListener('click', closeEditModal);
+        document.getElementById('saveEditBtn').addEventListener('click', saveEdit);
+        window.addEventListener('click', (e) => { if (e.target === document.getElementById('editModal')) closeEditModal(); });
+        // 其他按钮
         document.getElementById('importFileInput').addEventListener('change', e => { if(e.target.files.length) handleImport(e.target.files[0]); e.target.value=''; });
         document.getElementById('resetExampleBtn').addEventListener('click', resetToExample);
         document.getElementById('searchBtn').addEventListener('click', performSearchAndLocate);
         document.getElementById('clearHighlightBtn').addEventListener('click', clearHighlight);
         document.getElementById('searchKeyword').addEventListener('keypress', e => { if(e.key === 'Enter') performSearchAndLocate(); });
-        document.getElementById('closeModalBtn').addEventListener('click', closeModal);
-        document.getElementById('saveEditBtn').addEventListener('click', saveEdit);
-        window.addEventListener('click', e => { if(e.target === document.getElementById('editModal')) closeModal(); });
-        document.getElementById('addUrl').addEventListener('keypress', e => { if(e.key === 'Enter') autoFillByUrl(); });
-        document.getElementById('addName').addEventListener('keypress', e => { if(e.key === 'Enter') addSite(); });
         initSearchEngine();
 
-        // 备份按钮
         document.getElementById('backupToCloudBtn').addEventListener('click', backupToCloud);
         document.getElementById('restoreFromCloudBtn').addEventListener('click', restoreFromCloud);
         document.getElementById('genRandomKeyBtn').addEventListener('click', generateRandomKey);
@@ -703,23 +997,38 @@
         document.getElementById('restoreFromLocalBtn').addEventListener('click', triggerLocalRestore);
         document.getElementById('localRestoreFile').addEventListener('change', e => { if(e.target.files.length) handleLocalRestore(e.target.files[0]); e.target.value=''; });
 
-        // 编辑/删除模式
         const editBtn = document.getElementById('editModeBtn');
         const delBtn = document.getElementById('deleteModeBtn');
         editBtn.addEventListener('click', () => { if (editMode) exitEditMode(); else enterEditMode(); });
         delBtn.addEventListener('click', () => { if (deleteMode) { if (selectedIds.size > 0) confirmDeleteSelected(); else exitDeleteMode(true); } else enterDeleteMode(); });
 
-        // 排序
         const sortByName = document.getElementById('sortByNameBtn');
         const sortByFreq = document.getElementById('sortByFreqBtn');
-        sortByName.addEventListener('click', () => { currentSort = 'name'; sortByName.classList.add('active'); sortByFreq.classList.remove('active'); applySortAndRender(); });
-        sortByFreq.addEventListener('click', () => { currentSort = 'frequency'; sortByFreq.classList.add('active'); sortByName.classList.remove('active'); applySortAndRender(); });
-        sortByName.classList.add('active');
+        sortByName.addEventListener('click', () => { 
+            currentSort = 'name'; 
+            sortByName.classList.add('active'); 
+            sortByFreq.classList.remove('active'); 
+            applySortAndRender(); 
+        });
+        sortByFreq.addEventListener('click', () => { 
+            currentSort = 'frequency'; 
+            sortByFreq.classList.add('active'); 
+            sortByName.classList.remove('active'); 
+            applySortAndRender(); 
+        });
+        // 根据初始 currentSort 设置按钮高亮
+        if (currentSort === 'frequency') {
+            sortByFreq.classList.add('active');
+            sortByName.classList.remove('active');
+        } else {
+            sortByName.classList.add('active');
+            sortByFreq.classList.remove('active');
+        }
     }
 
     initData();
     bindEvents();
-    sortSitesBy('name');
+    sortSitesBy(currentSort);  // 初始按频率排序
     renderSites();
 </script>
 </body>
