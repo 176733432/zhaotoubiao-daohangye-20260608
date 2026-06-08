@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>投标导航 | 招投标网站管理</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <style>
+        * { margin:0; padding:0; box-sizing: border-box; font-family: system-ui, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif; }
+        body { background: #f0f4f8; padding: 24px 20px 48px; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .top-header { background: white; border-radius: 28px; padding: 18px 28px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #e9edf2; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
+        .logo-area { display: flex; align-items: baseline; gap: 12px; }
+        .logo { font-size: 1.6rem; font-weight: 600; background: linear-gradient(135deg, #1e3c72, #2a5298); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .date-area { font-size: 0.85rem; color: #5b6e8c; background: #f8fafd; padding: 6px 14px; border-radius: 40px; }
+        .search-engine { display: flex; align-items: center; gap: 8px; background: #f8fafd; padding: 5px 12px; border-radius: 60px; border: 1px solid #e2e8f0; }
+        .search-engine select { border: none; background: transparent; font-size: 0.85rem; font-weight: 500; color: #1e3a5f; cursor: pointer; outline: none; }
+        .search-engine input { border: none; background: transparent; padding: 8px 0; width: 200px; font-size: 0.9rem; outline: none; }
+        .search-engine button { background: #1e3c72; border: none; color: white; padding: 6px 16px; border-radius: 40px; font-weight: 500; cursor: pointer; transition: 0.2s; }
+        .search-engine button:hover { background: #0f2b52; }
+        .action-buttons { display: flex; gap: 12px; }
+        .btn-outline { background: white; border: 1px solid #cfdfed; padding: 8px 16px; border-radius: 40px; font-size: 0.85rem; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-outline:hover { background: #eef3fc; border-color: #2a7faa; }
+        .add-section { background: white; border-radius: 24px; padding: 20px 24px; margin-bottom: 28px; border: 1px solid #e9edf2; }
+        .form-row { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; }
+        .input-group { flex: 2; min-width: 200px; }
+        .input-group label { font-size: 0.7rem; font-weight: 600; color: #2c6280; margin-bottom: 6px; display: block; }
+        .input-group input { width: 100%; padding: 10px 14px; border-radius: 16px; border: 1px solid #cfdfed; background: #ffffff; font-size: 0.9rem; outline: none; }
+        .input-group input:focus { border-color: #2a7faa; box-shadow: 0 0 0 3px rgba(42,127,170,0.1); }
+        .btn-primary { background: #1e3c72; border: none; color: white; padding: 10px 20px; border-radius: 40px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-primary:hover { background: #0f2b52; transform: translateY(-1px); }
+        .btn-secondary { background: #eef2f8; border: 1px solid #cfdfed; padding: 10px 18px; border-radius: 40px; font-weight: 500; cursor: pointer; }
+        .search-locate { margin-bottom: 20px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; background: white; padding: 12px 20px; border-radius: 60px; border: 1px solid #e9edf2; }
+        .search-locate .search-input { flex: 1; min-width: 180px; }
+        .search-locate input { width: 100%; padding: 8px 16px; border-radius: 40px; border: 1px solid #cfdfed; font-size: 0.85rem; outline: none; }
+        .search-locate button { background: #eef2f8; border: none; padding: 8px 20px; border-radius: 40px; cursor: pointer; font-weight: 500; }
+        .sort-buttons { display: flex; gap: 8px; margin-left: auto; }
+        .sort-btn { background: white; border: 1px solid #cfdfed; padding: 6px 14px; border-radius: 40px; font-size: 0.8rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
+        .sort-btn.active { background: #1e3c72; color: white; border-color: #1e3c72; }
+        .sort-btn:hover { background: #eef3fc; border-color: #2a7faa; }
+        .backup-section { background: white; border-radius: 24px; padding: 18px 24px; margin-bottom: 28px; border: 1px solid #e9edf2; display: flex; flex-wrap: wrap; align-items: center; gap: 16px; justify-content: space-between; }
+        .cloud-backup { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; background: #f8fafc; padding: 8px 16px; border-radius: 60px; }
+        .cloud-backup input { border: 1px solid #cfdfed; border-radius: 40px; padding: 8px 12px; font-size: 0.85rem; width: 200px; outline: none; }
+        .cloud-backup button, .local-backup button { background: white; border: 1px solid #cfdfed; padding: 6px 14px; border-radius: 40px; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
+        .cloud-backup button:hover, .local-backup button:hover { background: #eef3fc; border-color: #2a7faa; }
+        .local-backup { display: flex; gap: 12px; align-items: center; }
+        .random-key-btn { background: #eef2f8; border: none; padding: 6px 12px; border-radius: 30px; font-size: 0.7rem; cursor: pointer; }
+        .edit-mode-bar { display: flex; gap: 12px; align-items: center; margin-left: auto; }
+        .edit-mode-btn, .delete-mode-btn { background: #1e3c72; color: white; border: none; padding: 8px 20px; border-radius: 40px; font-weight: 500; cursor: pointer; transition: 0.2s; }
+        .edit-mode-btn.active, .delete-mode-btn.active { background: #e03a3a; }
+        .sites-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 18px; margin-top: 12px; }
+        .card { background: white; border-radius: 20px; padding: 12px 16px; transition: all 0.2s; border: 1px solid #eef2f6; cursor: default; display: flex; align-items: center; justify-content: space-between; }
+        .card.drag-enabled { cursor: grab; }
+        .card.drag-enabled:active { cursor: grabbing; }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 12px 20px -12px rgba(0,0,0,0.12); border-color: #cbdde9; }
+        .card.selected { background: #e3f2fd; border-color: #2a7faa; box-shadow: 0 0 0 2px #2a7faa inset; }
+        .card.highlight { background: #fff7e5; border-left: 4px solid #f5b042; }
+        .drag-handle { cursor: grab; color: #9aaebf; margin-right: 12px; font-size: 0.9rem; }
+        .card-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+        .site-name-link { font-weight: 500; font-size: 0.85rem; color: #1e2f3e; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; cursor: pointer; }
+        .site-name-link:hover { color: #2a7faa; text-decoration: underline; }
+        .empty-state { text-align: center; padding: 56px 20px; background: white; border-radius: 32px; color: #8899b0; border: 1px dashed #cbdde9; }
+        .toast-msg { position: fixed; bottom: 24px; right: 24px; background: #1e2f41; color: white; padding: 10px 20px; border-radius: 40px; font-size: 0.85rem; z-index: 1000; opacity: 0; transition: 0.2s; pointer-events: none; }
+        .toast-msg.show { opacity: 1; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1050; }
+        .modal-content { background: white; border-radius: 32px; max-width: 460px; width: 90%; padding: 28px; }
+        .modal-buttons { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; }
+        @media (max-width: 640px) {
+            .top-header { flex-direction: column; align-items: stretch; }
+            .sites-grid { grid-template-columns: 1fr; }
+            .site-name-link { max-width: 140px; }
+            .backup-section { flex-direction: column; align-items: stretch; }
+            .cloud-backup, .local-backup { justify-content: space-between; }
+            .edit-mode-bar { margin-left: 0; }
+            .search-locate { flex-wrap: wrap; }
+            .sort-buttons { margin-left: 0; width: 100%; justify-content: flex-end; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="top-header">
+        <div class="logo-area"><div class="logo"><i class="fas fa-gavel"></i> 投标·导航仪</div><div class="date-area" id="liveDate"></div></div>
+        <div class="search-engine">
+            <select id="engineSelect"><option value="baidu">百度</option><option value="bing">必应</option><option value="google">谷歌</option></select>
+            <input type="text" id="searchKeywordEngine" placeholder="搜索招标资讯...">
+            <button id="engineSearchBtn"><i class="fas fa-search"></i> 搜</button>
+        </div>
+        <div class="action-buttons">
+            <label class="btn-outline" for="importFileInput"><i class="fas fa-upload"></i> 导入收藏夹</label>
+            <input type="file" id="importFileInput" accept=".htm,.html" style="display: none;">
+            <button id="resetExampleBtn" class="btn-outline"><i class="fas fa-database"></i> 重置示例</button>
+        </div>
+    </div>
+
+    <div class="add-section">
+        <div style="font-weight:600; margin-bottom:12px;"><i class="fas fa-plus-circle"></i> 自定义添加投标网站</div>
+        <div class="form-row">
+            <div class="input-group"><label>网址 URL *</label><input type="text" id="addUrl" placeholder="https://hsggzy.hengshui.gov.cn/"></div>
+            <div class="input-group"><label>网站名称 (可自动获取)</label><input type="text" id="addName" placeholder="自动获取或手动填写"></div>
+            <div><button id="fetchInfoBtn" class="btn-secondary"><i class="fas fa-magic"></i> 获取信息</button><button id="addSiteBtn" class="btn-primary"><i class="fas fa-save"></i> 添加网站</button></div>
+        </div>
+        <div style="font-size:0.7rem; color:#6b8aae; margin-top:8px;"><i class="fas fa-lightbulb"></i> 输入网址后点击“获取信息”→ 自动抓取网页标题作为名称</div>
+    </div>
+
+    <!-- 备份区域 + 编辑/删除控制按钮 -->
+    <div class="backup-section">
+        <div class="cloud-backup">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <input type="text" id="cloudKey" placeholder="云KEY (6-60位, 0-9a-zA-Z-_)" maxlength="60">
+            <button id="backupToCloudBtn"><i class="fas fa-upload"></i> 备份到云端</button>
+            <button id="restoreFromCloudBtn"><i class="fas fa-download"></i> 从云端恢复</button>
+            <button id="genRandomKeyBtn" class="random-key-btn" title="生成随机KEY"><i class="fas fa-dice-d6"></i> 随机KEY</button>
+        </div>
+        <div class="local-backup">
+            <i class="fas fa-hdd"></i>
+            <button id="backupToLocalBtn"><i class="fas fa-file-download"></i> 备份到本地</button>
+            <button id="restoreFromLocalBtn"><i class="fas fa-file-upload"></i> 从本地恢复</button>
+            <input type="file" id="localRestoreFile" accept=".json" style="display: none;">
+        </div>
+        <div class="edit-mode-bar">
+            <button id="editModeBtn" class="edit-mode-btn">编辑</button>
+            <button id="deleteModeBtn" class="delete-mode-btn">删除</button>
+        </div>
+    </div>
+
+    <!-- 查找栏 + 排序按钮 -->
+    <div class="search-locate">
+        <div class="search-input">
+            <input type="text" id="searchKeyword" placeholder="输入网站名称关键字，快速定位">
+        </div>
+        <button id="searchBtn">定位高亮</button>
+        <button id="clearHighlightBtn">清除高亮</button>
+        <div class="sort-buttons">
+            <button id="sortByNameBtn" class="sort-btn"><i class="fas fa-sort-alpha-down"></i> 按首字母</button>
+            <button id="sortByFreqBtn" class="sort-btn"><i class="fas fa-chart-line"></i> 按使用频率</button>
+        </div>
+    </div>
+
+    <div id="sitesGridContainer" class="sites-grid"></div>
+</div>
+
+<div id="editModal" class="modal"><div class="modal-content"><h3><i class="fas fa-pen-alt"></i> 编辑站点</h3><div class="input-group" style="margin-bottom:18px;"><label>网站名称</label><input type="text" id="editName" placeholder="名称"></div><div class="input-group" style="margin-bottom:18px;"><label>网址 URL</label><input type="text" id="editUrl" placeholder="https://..."></div><div class="modal-buttons"><button id="closeModalBtn" class="btn-secondary">取消</button><button id="saveEditBtn" class="btn-primary">保存修改</button></div></div></div>
+<div id="toastMsg" class="toast-msg"></div>
+
+<script>
+    let sites = [];
+    let editId = null;
+    let sortableInstance = null;
+    let currentSearchKeyword = "";
+    const STORAGE_KEY = 'tender_nav_pro_sites';
+    const CLICK_COUNT_KEY = 'tender_nav_click_counts';
+
+    // 模式控制
+    let editMode = false;
+    let deleteMode = false;
+    let selectedIds = new Set();
+
+    // 排序状态
+    let currentSort = 'name'; // 'name' 或 'frequency'
+    let clickCounts = {};
+
+    function loadClickCounts() {
+        const stored = localStorage.getItem(CLICK_COUNT_KEY);
+        try { clickCounts = stored ? JSON.parse(stored) : {}; } catch(e) { clickCounts = {}; }
+    }
+    function saveClickCounts() { localStorage.setItem(CLICK_COUNT_KEY, JSON.stringify(clickCounts)); }
+    function incrementClickCount(url) {
+        clickCounts[url] = (clickCounts[url] || 0) + 1;
+        saveClickCounts();
+        if (currentSort === 'frequency') applySortAndRender();
+    }
+
+    function showToast(msg, duration = 2200) {
+        const toast = document.getElementById('toastMsg');
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), duration);
+    }
+    function saveToLocal() { localStorage.setItem(STORAGE_KEY, JSON.stringify(sites)); }
+    function loadDefaultSites() {
+        return [
+            { id: Date.now() + 1, name: "衡水市公共资源交易中心", url: "http://hsggzy.hengshui.gov.cn/" },
+            { id: Date.now() + 2, name: "河北省公共资源交易中心", url: "http://ggzy.hebei.gov.cn/hbjyzx/" },
+            { id: Date.now() + 3, name: "E招冀成电子招标平台", url: "https://www.hebeibidding.com/" },
+            { id: Date.now() + 4, name: "惠招标电子招投标平台", url: "http://www.hbidding.com/" },
+            { id: Date.now() + 5, name: "招标通电子招投标平台", url: "http://www.hebztb.com/" }
+        ];
+    }
+    function initData() {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+            try { sites = JSON.parse(stored); if (!Array.isArray(sites) || sites.length === 0) sites = loadDefaultSites(); } catch(e) { sites = loadDefaultSites(); }
+        } else { sites = loadDefaultSites(); }
+        sites.forEach(s => { if (!s.id) s.id = Date.now() + Math.floor(Math.random() * 100000); if (typeof s.id === 'number' && !Number.isInteger(s.id)) s.id = Math.floor(s.id); });
+        loadClickCounts();
+    }
+
+    function sortSitesBy(type) {
+        if (type === 'name') sites.sort((a, b) => a.name.localeCompare(b.name, 'zh'));
+        else if (type === 'frequency') sites.sort((a, b) => (clickCounts[b.url] || 0) - (clickCounts[a.url] || 0));
+        saveToLocal();
+    }
+    function applySortAndRender() { sortSitesBy(currentSort); renderSites(); }
+
+    async function fetchWebsiteTitleFromUrl(rawUrl) {
+        let fullUrl = rawUrl.trim();
+        if (!fullUrl) return null;
+        if (!fullUrl.startsWith('http')) fullUrl = 'https://' + fullUrl;
+        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(fullUrl)}`;
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000);
+            const response = await fetch(proxyUrl, { signal: controller.signal });
+            clearTimeout(timeoutId);
+            if (!response.ok) throw new Error();
+            const html = await response.text();
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            let title = doc.querySelector('title')?.innerText?.trim();
+            if (title) return title.replace(/\s+/g, ' ').substring(0, 80);
+            return null;
+        } catch (err) {
+            try { return new URL(fullUrl).hostname.replace(/^www\./, ''); } catch(e) { return null; }
+        }
+    }
+    async function autoFillByUrl() {
+        const urlInput = document.getElementById('addUrl');
+        let url = urlInput.value.trim();
+        if (!url) { showToast('请输入网址', 1500); return; }
+        if (!url.startsWith('http')) url = 'https://' + url;
+        urlInput.value = url;
+        const btn = document.getElementById('fetchInfoBtn');
+        const original = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> 获取中...';
+        btn.disabled = true;
+        try {
+            const title = await fetchWebsiteTitleFromUrl(url);
+            if (title) { document.getElementById('addName').value = title; showToast(`✅ 获取成功: ${title.substring(0,40)}`, 2000); }
+            else { let domain = new URL(url).hostname.replace(/^www\./, ''); document.getElementById('addName').value = domain || '未命名'; showToast(`⚠️ 使用域名作为名称`, 2000); }
+        } catch(e) { showToast('获取失败，请手动输入', 1800); }
+        finally { btn.innerHTML = original; btn.disabled = false; }
+    }
+    async function addSite() {
+        let url = document.getElementById('addUrl').value.trim();
+        let name = document.getElementById('addName').value.trim();
+        if (!url) { showToast('请填写网址', 1200); return; }
+        if (!url.startsWith('http')) url = 'https://' + url;
+        if (!name) {
+            const tryTitle = await fetchWebsiteTitleFromUrl(url);
+            if (tryTitle) name = tryTitle;
+            else try { name = new URL(url).hostname.replace(/^www\./, ''); } catch(e) { name = url; }
+        }
+        if (sites.some(s => s.url === url)) { showToast('网址已存在', 1500); return; }
+        const newId = Date.now() + Math.floor(Math.random() * 100000);
+        sites.push({ id: newId, name: name.substring(0,100), url });
+        saveToLocal();
+        applySortAndRender();
+        document.getElementById('addUrl').value = '';
+        document.getElementById('addName').value = '';
+        showToast(`✨ 已添加 ${name}`, 1500);
+    }
+    
+    function openEditModalById(id) {
+        const site = sites.find(s => s.id === id);
+        if (!site) return;
+        editId = id;
+        document.getElementById('editName').value = site.name;
+        document.getElementById('editUrl').value = site.url;
+        document.getElementById('editModal').style.display = 'flex';
+    }
+    function saveEdit() {
+        if (editId === null) return;
+        const newName = document.getElementById('editName').value.trim();
+        let newUrl = document.getElementById('editUrl').value.trim();
+        if (!newName || !newUrl) { showToast('名称和网址不能为空', 1200); return; }
+        if (!newUrl.startsWith('http')) newUrl = 'https://' + newUrl;
+        const idx = sites.findIndex(s => s.id === editId);
+        if (idx !== -1) {
+            if (sites.some(s => s.id !== editId && s.url === newUrl)) { showToast('网址已存在', 1500); return; }
+            sites[idx].name = newName;
+            sites[idx].url = newUrl;
+            saveToLocal();
+            applySortAndRender();
+            showToast('修改成功', 1200);
+        }
+        closeModal();
+    }
+    function closeModal() { document.getElementById('editModal').style.display = 'none'; editId = null; }
+
+    // 删除模式逻辑
+    function enterDeleteMode() {
+        if (editMode) exitEditMode();
+        deleteMode = true;
+        selectedIds.clear();
+        const delBtn = document.getElementById('deleteModeBtn');
+        delBtn.textContent = '取消删除';
+        delBtn.classList.add('active');
+        if (sortableInstance) sortableInstance.destroy();
+        sortableInstance = null;
+        renderSitesWithMode();
+    }
+    // 退出删除模式（不清除选中数据，但调用时一般已清除）
+    function exitDeleteMode(resetSelection = true) {
+        deleteMode = false;
+        if (resetSelection) selectedIds.clear();
+        const delBtn = document.getElementById('deleteModeBtn');
+        delBtn.textContent = '删除';
+        delBtn.classList.remove('active');
+        reinitSortable();
+        renderSites();
+    }
+    // 更新删除按钮文字（根据是否有选中）
+    function updateDeleteButtonText() {
+        if (!deleteMode) return;
+        const delBtn = document.getElementById('deleteModeBtn');
+        if (selectedIds.size > 0) delBtn.textContent = '确认删除';
+        else delBtn.textContent = '取消删除';
+    }
+    // 执行删除确认
+    function confirmDeleteSelected() {
+        if (selectedIds.size === 0) {
+            // 无选中时，点击取消删除模式
+            exitDeleteMode(true);
+            return;
+        }
+        const toDelete = sites.filter(s => selectedIds.has(s.id));
+        const names = toDelete.map(s => s.name).join('、');
+        if (confirm(`确认删除以下 ${toDelete.length} 个网站吗？\n${names}`)) {
+            sites = sites.filter(s => !selectedIds.has(s.id));
+            saveToLocal();
+            exitDeleteMode(true);
+            applySortAndRender();
+            showToast(`已删除 ${toDelete.length} 个网站`, 1500);
+        } else {
+            // 取消：不清除选中，但保持删除模式，按钮变回“取消删除”
+            updateDeleteButtonText();
+        }
+    }
+    function toggleDeleteSelection(id) {
+        if (selectedIds.has(id)) selectedIds.delete(id);
+        else selectedIds.add(id);
+        updateDeleteButtonText();
+        const card = document.querySelector(`.card[data-id='${id}']`);
+        if (card) {
+            if (selectedIds.has(id)) card.classList.add('selected');
+            else card.classList.remove('selected');
+        }
+    }
+
+    // 编辑模式
+    function enterEditMode() {
+        if (deleteMode) exitDeleteMode(true);
+        editMode = true;
+        const editBtn = document.getElementById('editModeBtn');
+        editBtn.textContent = '取消编辑';
+        editBtn.classList.add('active');
+        if (sortableInstance) sortableInstance.destroy();
+        sortableInstance = null;
+        renderSitesWithMode();
+    }
+    function exitEditMode() {
+        editMode = false;
+        const editBtn = document.getElementById('editModeBtn');
+        editBtn.textContent = '编辑';
+        editBtn.classList.remove('active');
+        reinitSortable();
+        renderSites();
+    }
+
+    function reinitSortable() {
+        if (sortableInstance) sortableInstance.destroy();
+        const container = document.getElementById('sitesGridContainer');
+        if (container && !editMode && !deleteMode) {
+            sortableInstance = new Sortable(container, {
+                handle: '.drag-handle',
+                animation: 200,
+                onEnd: () => {
+                    const cards = document.querySelectorAll('.card');
+                    const newOrder = [];
+                    cards.forEach(card => {
+                        const id = Number(card.dataset.id);
+                        const found = sites.find(s => s.id === id);
+                        if (found) newOrder.push(found);
+                    });
+                    if (newOrder.length === sites.length) {
+                        sites = newOrder;
+                        saveToLocal();
+                        if (currentSearchKeyword) performSearchAndLocate();
+                    } else renderSites();
+                }
+            });
+        } else sortableInstance = null;
+    }
+
+    // 核心渲染，模式决定点击行为
+    function renderSitesWithMode() {
+        const container = document.getElementById('sitesGridContainer');
+        if (!container) return;
+        if (sites.length === 0) {
+            container.innerHTML = `<div class="empty-state"><i class="fas fa-folder-open"></i><p>暂无站点，点击上方添加或导入收藏夹</p></div>`;
+            return;
+        }
+        let html = '';
+        sites.forEach(site => {
+            const selectedClass = (deleteMode && selectedIds.has(site.id)) ? 'selected' : '';
+            html += `<div class="card ${selectedClass}" data-id="${site.id}">
+                        <div style="display:flex; align-items:center; flex:1; min-width:0;">
+                            <i class="fas fa-grip-vertical drag-handle"></i>
+                            <div class="card-left">
+                                <a href="${escapeHtml(site.url)}" target="_blank" rel="noopener noreferrer" class="site-name-link" data-id="${site.id}" data-url="${escapeHtml(site.url)}" title="访问 ${escapeHtml(site.name)}">${escapeHtml(site.name)}</a>
+                            </div>
+                        </div>
+                    </div>`;
+        });
+        container.innerHTML = html;
+        
+        // 统一处理卡片和链接的点击事件，根据模式决定行为
+        document.querySelectorAll('.card').forEach(card => {
+            const id = Number(card.dataset.id);
+            const link = card.querySelector('.site-name-link');
+            // 移除原有链接事件，重新绑定
+            if (link) {
+                const newLink = link.cloneNode(true);
+                link.parentNode.replaceChild(newLink, link);
+                // 根据模式处理链接点击
+                if (editMode || deleteMode) {
+                    // 阻止跳转，改为模式操作
+                    newLink.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        if (editMode) {
+                            openEditModalById(id);
+                        } else if (deleteMode) {
+                            toggleDeleteSelection(id);
+                        }
+                    });
+                } else {
+                    // 普通模式：正常跳转，并记录点击频率
+                    newLink.addEventListener('click', (e) => {
+                        const url = newLink.getAttribute('data-url');
+                        incrementClickCount(url);
+                        // 正常跳转由 href 完成，无需额外处理
+                    });
+                }
+            }
+            // 卡片主体点击（非链接区域）
+            card.addEventListener('click', (e) => {
+                // 如果点击的是链接本身或其内部，阻止冒泡避免重复触发（已处理）
+                if (e.target.closest('.site-name-link')) return;
+                if (editMode) {
+                    openEditModalById(id);
+                } else if (deleteMode) {
+                    toggleDeleteSelection(id);
+                }
+            });
+        });
+        
+        if (currentSearchKeyword) performSearchAndLocate();
+        if (!editMode && !deleteMode) reinitSortable();
+        else if (sortableInstance) sortableInstance.destroy();
+    }
+    function renderSites() { renderSitesWithMode(); }
+
+    // 书签导入
+    async function importBookmarksFromHtml(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const doc = new DOMParser().parseFromString(e.target.result, 'text/html');
+                const links = doc.querySelectorAll('a');
+                if (links.length === 0) reject('未找到链接');
+                const newSites = [], existing = new Set(sites.map(s => s.url));
+                for (let link of links) {
+                    let href = link.getAttribute('href');
+                    let title = link.textContent?.trim() || link.getAttribute('title') || '';
+                    if (!href || (!href.startsWith('http') && !href.startsWith('https'))) continue;
+                    if (!title) try { title = new URL(href).hostname; } catch(e) { title = '导入站点'; }
+                    if (!existing.has(href)) {
+                        newSites.push({ id: Date.now() + Math.random() * 10000 + newSites.length, name: title.substring(0,100), url: href });
+                        existing.add(href);
+                    }
+                }
+                resolve(newSites);
+            };
+            reader.onerror = () => reject('文件读取失败');
+            reader.readAsText(file, 'UTF-8');
+        });
+    }
+    async function handleImport(file) {
+        if (!file) return;
+        try {
+            const imported = await importBookmarksFromHtml(file);
+            if (!imported.length) { showToast('无新链接或格式无效', 2000); return; }
+            sites.push(...imported);
+            saveToLocal();
+            applySortAndRender();
+            showToast(`📥 成功导入 ${imported.length} 个站点`, 2000);
+        } catch(e) { showToast('解析失败，请检查文件格式', 2500); }
+    }
+    function resetToExample() {
+        if (confirm('重置将覆盖所有网站，恢复示例数据，确定吗？')) {
+            sites = loadDefaultSites();
+            saveToLocal();
+            applySortAndRender();
+            showToast('已重置为示例数据', 1300);
+        }
+    }
+    function performSearchAndLocate() {
+        const kw = document.getElementById('searchKeyword').value.trim().toLowerCase();
+        currentSearchKeyword = kw;
+        const cards = document.querySelectorAll('.card');
+        let first = null;
+        cards.forEach(c => {
+            const name = c.querySelector('.site-name-link')?.innerText.toLowerCase();
+            if (kw && name?.includes(kw)) {
+                c.classList.add('highlight');
+                if (!first) first = c;
+            } else c.classList.remove('highlight');
+        });
+        if (first) { first.scrollIntoView({ behavior: 'smooth', block: 'center' }); showToast(`找到匹配站点`, 1500); }
+        else if (kw) showToast(`未找到包含 “${kw}” 的站点`, 1500);
+    }
+    function clearHighlight() {
+        document.getElementById('searchKeyword').value = '';
+        currentSearchKeyword = '';
+        document.querySelectorAll('.card').forEach(c => c.classList.remove('highlight'));
+    }
+    function initSearchEngine() {
+        const btn = document.getElementById('engineSearchBtn');
+        const select = document.getElementById('engineSelect');
+        const input = document.getElementById('searchKeywordEngine');
+        btn.onclick = () => {
+            let kw = input.value.trim();
+            if (!kw) { showToast('请输入搜索词', 1000); return; }
+            let url = select.value === 'baidu' ? `https://www.baidu.com/s?wd=${encodeURIComponent(kw)}` : (select.value === 'bing' ? `https://cn.bing.com/search?q=${encodeURIComponent(kw)}` : `https://www.google.com/search?q=${encodeURIComponent(kw)}`);
+            window.open(url, '_blank');
+        };
+        input.addEventListener('keypress', e => { if (e.key === 'Enter') btn.click(); });
+    }
+
+    // 云端备份逻辑
+    function isValidKey(key) { return /^[0-9a-zA-Z\-_]{6,60}$/.test(key); }
+    async function backupToCloud() {
+        const key = document.getElementById('cloudKey').value.trim();
+        if (!isValidKey(key)) { showToast('云KEY必须是6-60位字符：0-9a-zA-Z-_', 3000); return; }
+        const dataStr = JSON.stringify(sites);
+        const formBody = new URLSearchParams({ key, value: dataStr }).toString();
+        const backupBtn = document.getElementById('backupToCloudBtn');
+        backupBtn.disabled = true;
+        const originalText = backupBtn.innerHTML;
+        backupBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> 备份中...';
+        try {
+            const resp = await fetch('https://textdb.online/update/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: formBody
+            });
+            const json = await resp.json();
+            if (json.status === 1) showToast('✅ 云端备份成功！', 2000);
+            else throw new Error(json.message || 'API返回失败');
+        } catch (err) {
+            console.error(err);
+            showToast('❌ 云端备份失败，将自动转为本地备份', 3000);
+            backupToLocal();
+        } finally {
+            backupBtn.disabled = false;
+            backupBtn.innerHTML = originalText;
+        }
+    }
+    async function restoreFromCloud() {
+        const key = document.getElementById('cloudKey').value.trim();
+        if (!isValidKey(key)) { showToast('云KEY格式不正确', 3000); return; }
+        const restoreBtn = document.getElementById('restoreFromCloudBtn');
+        restoreBtn.disabled = true;
+        const originalText = restoreBtn.innerHTML;
+        restoreBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> 恢复中...';
+        try {
+            const resp = await fetch(`https://textdb.online/${encodeURIComponent(key)}`, { method: 'GET' });
+            const text = await resp.text();
+            if (!text || text.trim() === '') { showToast('云端无数据或KEY不存在，无法恢复', 3000); return; }
+            let parsed;
+            try { parsed = JSON.parse(text); } catch(e) { throw new Error('云端数据损坏'); }
+            if (!Array.isArray(parsed)) throw new Error('数据格式错误');
+            if (confirm(`从云端恢复将覆盖当前所有网站，确定吗？共有 ${parsed.length} 个站点。`)) {
+                sites = parsed;
+                saveToLocal();
+                applySortAndRender();
+                showToast(`🌐 已从云端恢复 ${parsed.length} 个站点`, 2000);
+            }
+        } catch (err) {
+            showToast('恢复失败: ' + err.message, 3000);
+        } finally {
+            restoreBtn.disabled = false;
+            restoreBtn.innerHTML = originalText;
+        }
+    }
+    function generateRandomKey() {
+        const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_';
+        let result = '';
+        for (let i = 0; i < 20; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
+        document.getElementById('cloudKey').value = result;
+        showToast('已生成随机KEY，建议保存', 1500);
+    }
+    function backupToLocal() {
+        const dataStr = JSON.stringify(sites, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `tender_sites_backup_${new Date().toISOString().slice(0,19)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('✅ 已备份到本地文件', 1500);
+    }
+    function triggerLocalRestore() { document.getElementById('localRestoreFile').click(); }
+    function handleLocalRestore(file) {
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const parsed = JSON.parse(e.target.result);
+                if (!Array.isArray(parsed)) throw new Error();
+                if (confirm(`从本地恢复将覆盖当前所有网站，确定吗？共有 ${parsed.length} 个站点。`)) {
+                    sites = parsed;
+                    saveToLocal();
+                    applySortAndRender();
+                    showToast(`📁 已从本地恢复 ${parsed.length} 个站点`, 2000);
+                }
+            } catch (err) { showToast('恢复失败：文件解析错误', 3000); }
+        };
+        reader.readAsText(file);
+    }
+
+    function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
+    function updateDate() { document.getElementById('liveDate').innerHTML = `<i class="far fa-calendar-alt"></i> ${new Date().toLocaleDateString('zh-CN', { year:'numeric', month:'numeric', day:'numeric', weekday:'short' })}`; }
+    setInterval(updateDate, 60000); updateDate();
+
+    function bindEvents() {
+        document.getElementById('addSiteBtn').addEventListener('click', addSite);
+        document.getElementById('fetchInfoBtn').addEventListener('click', autoFillByUrl);
+        document.getElementById('importFileInput').addEventListener('change', e => { if(e.target.files.length) handleImport(e.target.files[0]); e.target.value=''; });
+        document.getElementById('resetExampleBtn').addEventListener('click', resetToExample);
+        document.getElementById('searchBtn').addEventListener('click', performSearchAndLocate);
+        document.getElementById('clearHighlightBtn').addEventListener('click', clearHighlight);
+        document.getElementById('searchKeyword').addEventListener('keypress', e => { if(e.key === 'Enter') performSearchAndLocate(); });
+        document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+        document.getElementById('saveEditBtn').addEventListener('click', saveEdit);
+        window.addEventListener('click', e => { if(e.target === document.getElementById('editModal')) closeModal(); });
+        document.getElementById('addUrl').addEventListener('keypress', e => { if(e.key === 'Enter') autoFillByUrl(); });
+        document.getElementById('addName').addEventListener('keypress', e => { if(e.key === 'Enter') addSite(); });
+        initSearchEngine();
+        document.getElementById('backupToCloudBtn').addEventListener('click', backupToCloud);
+        document.getElementById('restoreFromCloudBtn').addEventListener('click', restoreFromCloud);
+        document.getElementById('genRandomKeyBtn').addEventListener('click', generateRandomKey);
+        document.getElementById('backupToLocalBtn').addEventListener('click', backupToLocal);
+        document.getElementById('restoreFromLocalBtn').addEventListener('click', triggerLocalRestore);
+        document.getElementById('localRestoreFile').addEventListener('change', e => { if(e.target.files.length) handleLocalRestore(e.target.files[0]); e.target.value=''; });
+        
+        const editBtn = document.getElementById('editModeBtn');
+        const delBtn = document.getElementById('deleteModeBtn');
+        editBtn.addEventListener('click', () => {
+            if (editMode) exitEditMode();
+            else enterEditMode();
+        });
+        delBtn.addEventListener('click', () => {
+            if (deleteMode) {
+                if (selectedIds.size > 0) confirmDeleteSelected();
+                else exitDeleteMode(true);
+            } else enterDeleteMode();
+        });
+
+        const sortByName = document.getElementById('sortByNameBtn');
+        const sortByFreq = document.getElementById('sortByFreqBtn');
+        sortByName.addEventListener('click', () => {
+            currentSort = 'name';
+            sortByName.classList.add('active');
+            sortByFreq.classList.remove('active');
+            applySortAndRender();
+        });
+        sortByFreq.addEventListener('click', () => {
+            currentSort = 'frequency';
+            sortByFreq.classList.add('active');
+            sortByName.classList.remove('active');
+            applySortAndRender();
+        });
+        sortByName.classList.add('active');
+    }
+
+    initData();
+    bindEvents();
+    sortSitesBy('name');
+    renderSites();
+</script>
+</body>
+</html>
