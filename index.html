@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>投标导航 | 招投标网站管理</title>
+    <title>投标导航 | 招投标网站管理 + 可靠分片云端备份</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <style>
@@ -108,9 +108,9 @@
     <div class="backup-section">
         <div class="cloud-backup">
             <i class="fas fa-cloud-upload-alt"></i>
-            <input type="text" id="cloudKey" placeholder="云KEY (6-60位, 0-9a-zA-Z-_)" maxlength="60">
-            <button id="backupToCloudBtn"><i class="fas fa-upload"></i> 备份到云端</button>
-            <button id="restoreFromCloudBtn"><i class="fas fa-download"></i> 从云端恢复</button>
+            <input type="text" id="cloudKey" placeholder="主KEY (6-60位, 如 JSTTK20260428ZDGS)" maxlength="60">
+            <button id="backupToCloudBtn"><i class="fas fa-upload"></i> 分片备份到云端</button>
+            <button id="restoreFromCloudBtn"><i class="fas fa-download"></i> 从云端分片恢复</button>
             <button id="genRandomKeyBtn" class="random-key-btn" title="生成随机KEY"><i class="fas fa-dice-d6"></i> 随机KEY</button>
         </div>
         <div class="local-backup">
@@ -145,6 +145,7 @@
 <div id="toastMsg" class="toast-msg"></div>
 
 <script>
+    // ---------- 核心数据 ----------
     let sites = [];
     let editId = null;
     let sortableInstance = null;
@@ -152,14 +153,23 @@
     const STORAGE_KEY = 'tender_nav_pro_sites';
     const CLICK_COUNT_KEY = 'tender_nav_click_counts';
 
-    // 模式控制
     let editMode = false;
     let deleteMode = false;
     let selectedIds = new Set();
-
-    // 排序状态
-    let currentSort = 'name'; // 'name' 或 'frequency'
+    let currentSort = 'name';
     let clickCounts = {};
+
+    // ---------- 辅助函数 ----------
+    function showToast(msg, duration = 2200) {
+        const toast = document.getElementById('toastMsg');
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), duration);
+    }
+
+    function saveToLocal() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(sites));
+    }
 
     function loadClickCounts() {
         const stored = localStorage.getItem(CLICK_COUNT_KEY);
@@ -172,13 +182,6 @@
         if (currentSort === 'frequency') applySortAndRender();
     }
 
-    function showToast(msg, duration = 2200) {
-        const toast = document.getElementById('toastMsg');
-        toast.textContent = msg;
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), duration);
-    }
-    function saveToLocal() { localStorage.setItem(STORAGE_KEY, JSON.stringify(sites)); }
     function loadDefaultSites() {
         return [
             { id: Date.now() + 1, name: "衡水市公共资源交易中心", url: "http://hsggzy.hengshui.gov.cn/" },
@@ -188,6 +191,7 @@
             { id: Date.now() + 5, name: "招标通电子招投标平台", url: "http://www.hebztb.com/" }
         ];
     }
+
     function initData() {
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored) {
@@ -204,6 +208,7 @@
     }
     function applySortAndRender() { sortSitesBy(currentSort); renderSites(); }
 
+    // 自动获取标题 (略)
     async function fetchWebsiteTitleFromUrl(rawUrl) {
         let fullUrl = rawUrl.trim();
         if (!fullUrl) return null;
@@ -260,7 +265,7 @@
         document.getElementById('addName').value = '';
         showToast(`✨ 已添加 ${name}`, 1500);
     }
-    
+
     function openEditModalById(id) {
         const site = sites.find(s => s.id === id);
         if (!site) return;
@@ -288,7 +293,7 @@
     }
     function closeModal() { document.getElementById('editModal').style.display = 'none'; editId = null; }
 
-    // 删除模式逻辑
+    // 删除模式 (需求: 有选中时按钮显示"确认删除"，无选中时显示"取消删除"，点击后行为正确)
     function enterDeleteMode() {
         if (editMode) exitEditMode();
         deleteMode = true;
@@ -300,7 +305,6 @@
         sortableInstance = null;
         renderSitesWithMode();
     }
-    // 退出删除模式（不清除选中数据，但调用时一般已清除）
     function exitDeleteMode(resetSelection = true) {
         deleteMode = false;
         if (resetSelection) selectedIds.clear();
@@ -310,17 +314,14 @@
         reinitSortable();
         renderSites();
     }
-    // 更新删除按钮文字（根据是否有选中）
     function updateDeleteButtonText() {
         if (!deleteMode) return;
         const delBtn = document.getElementById('deleteModeBtn');
         if (selectedIds.size > 0) delBtn.textContent = '确认删除';
         else delBtn.textContent = '取消删除';
     }
-    // 执行删除确认
     function confirmDeleteSelected() {
         if (selectedIds.size === 0) {
-            // 无选中时，点击取消删除模式
             exitDeleteMode(true);
             return;
         }
@@ -333,7 +334,6 @@
             applySortAndRender();
             showToast(`已删除 ${toDelete.length} 个网站`, 1500);
         } else {
-            // 取消：不清除选中，但保持删除模式，按钮变回“取消删除”
             updateDeleteButtonText();
         }
     }
@@ -342,13 +342,8 @@
         else selectedIds.add(id);
         updateDeleteButtonText();
         const card = document.querySelector(`.card[data-id='${id}']`);
-        if (card) {
-            if (selectedIds.has(id)) card.classList.add('selected');
-            else card.classList.remove('selected');
-        }
+        if (card) card.classList.toggle('selected', selectedIds.has(id));
     }
-
-    // 编辑模式
     function enterEditMode() {
         if (deleteMode) exitDeleteMode(true);
         editMode = true;
@@ -367,7 +362,6 @@
         reinitSortable();
         renderSites();
     }
-
     function reinitSortable() {
         if (sortableInstance) sortableInstance.destroy();
         const container = document.getElementById('sitesGridContainer');
@@ -383,24 +377,17 @@
                         const found = sites.find(s => s.id === id);
                         if (found) newOrder.push(found);
                     });
-                    if (newOrder.length === sites.length) {
-                        sites = newOrder;
-                        saveToLocal();
-                        if (currentSearchKeyword) performSearchAndLocate();
-                    } else renderSites();
+                    if (newOrder.length === sites.length) { sites = newOrder; saveToLocal(); if (currentSearchKeyword) performSearchAndLocate(); }
+                    else renderSites();
                 }
             });
         } else sortableInstance = null;
     }
 
-    // 核心渲染，模式决定点击行为
     function renderSitesWithMode() {
         const container = document.getElementById('sitesGridContainer');
         if (!container) return;
-        if (sites.length === 0) {
-            container.innerHTML = `<div class="empty-state"><i class="fas fa-folder-open"></i><p>暂无站点，点击上方添加或导入收藏夹</p></div>`;
-            return;
-        }
+        if (sites.length === 0) { container.innerHTML = `<div class="empty-state"><i class="fas fa-folder-open"></i><p>暂无站点，点击上方添加或导入收藏夹</p></div>`; return; }
         let html = '';
         sites.forEach(site => {
             const selectedClass = (deleteMode && selectedIds.has(site.id)) ? 'selected' : '';
@@ -414,54 +401,38 @@
                     </div>`;
         });
         container.innerHTML = html;
-        
-        // 统一处理卡片和链接的点击事件，根据模式决定行为
         document.querySelectorAll('.card').forEach(card => {
             const id = Number(card.dataset.id);
             const link = card.querySelector('.site-name-link');
-            // 移除原有链接事件，重新绑定
             if (link) {
                 const newLink = link.cloneNode(true);
                 link.parentNode.replaceChild(newLink, link);
-                // 根据模式处理链接点击
                 if (editMode || deleteMode) {
-                    // 阻止跳转，改为模式操作
                     newLink.addEventListener('click', (e) => {
                         e.preventDefault();
-                        if (editMode) {
-                            openEditModalById(id);
-                        } else if (deleteMode) {
-                            toggleDeleteSelection(id);
-                        }
+                        if (editMode) openEditModalById(id);
+                        else if (deleteMode) toggleDeleteSelection(id);
                     });
                 } else {
-                    // 普通模式：正常跳转，并记录点击频率
                     newLink.addEventListener('click', (e) => {
                         const url = newLink.getAttribute('data-url');
                         incrementClickCount(url);
-                        // 正常跳转由 href 完成，无需额外处理
                     });
                 }
             }
-            // 卡片主体点击（非链接区域）
             card.addEventListener('click', (e) => {
-                // 如果点击的是链接本身或其内部，阻止冒泡避免重复触发（已处理）
                 if (e.target.closest('.site-name-link')) return;
-                if (editMode) {
-                    openEditModalById(id);
-                } else if (deleteMode) {
-                    toggleDeleteSelection(id);
-                }
+                if (editMode) openEditModalById(id);
+                else if (deleteMode) toggleDeleteSelection(id);
             });
         });
-        
         if (currentSearchKeyword) performSearchAndLocate();
         if (!editMode && !deleteMode) reinitSortable();
         else if (sortableInstance) sortableInstance.destroy();
     }
     function renderSites() { renderSitesWithMode(); }
 
-    // 书签导入
+    // 导入收藏夹
     async function importBookmarksFromHtml(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -512,10 +483,8 @@
         let first = null;
         cards.forEach(c => {
             const name = c.querySelector('.site-name-link')?.innerText.toLowerCase();
-            if (kw && name?.includes(kw)) {
-                c.classList.add('highlight');
-                if (!first) first = c;
-            } else c.classList.remove('highlight');
+            if (kw && name?.includes(kw)) { c.classList.add('highlight'); if (!first) first = c; }
+            else c.classList.remove('highlight');
         });
         if (first) { first.scrollIntoView({ behavior: 'smooth', block: 'center' }); showToast(`找到匹配站点`, 1500); }
         else if (kw) showToast(`未找到包含 “${kw}” 的站点`, 1500);
@@ -538,49 +507,120 @@
         input.addEventListener('keypress', e => { if (e.key === 'Enter') btn.click(); });
     }
 
-    // 云端备份逻辑
-    function isValidKey(key) { return /^[0-9a-zA-Z\-_]{6,60}$/.test(key); }
+    // ========== 云端备份/恢复核心 (完全参照附件稳定实现) ==========
+    const MAX_VALUE_SIZE = 200000; // 20万字符上限
+    // 写入单条记录 (严格参照附件 writeToCloud)
+    async function writeTextDB(key, value) {
+        const url = `https://textdb.online/update/?key=${encodeURIComponent(key)}&value=${encodeURIComponent(value)}`;
+        const resp = await fetch(url, { method: 'POST' });
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const json = await resp.json();
+        if (json.status !== 1) throw new Error(`API返回失败: ${JSON.stringify(json)}`);
+        return json;
+    }
+    // 读取单条记录
+    async function readTextDB(key) {
+        const resp = await fetch(`https://textdb.online/${encodeURIComponent(key)}`, { method: 'GET' });
+        if (!resp.ok) return null;
+        const text = await resp.text();
+        return text || null;
+    }
+
+    // 分片备份 (自动判断是否需要分片，完全参照附件思路)
     async function backupToCloud() {
-        const key = document.getElementById('cloudKey').value.trim();
-        if (!isValidKey(key)) { showToast('云KEY必须是6-60位字符：0-9a-zA-Z-_', 3000); return; }
+        const masterKey = document.getElementById('cloudKey').value.trim();
+        if (!/^[0-9a-zA-Z\-_]{6,60}$/.test(masterKey)) {
+            showToast('主KEY必须是6-60位字符：0-9a-zA-Z-_', 3000);
+            return;
+        }
         const dataStr = JSON.stringify(sites);
-        const formBody = new URLSearchParams({ key, value: dataStr }).toString();
+        const totalLen = dataStr.length;
         const backupBtn = document.getElementById('backupToCloudBtn');
         backupBtn.disabled = true;
         const originalText = backupBtn.innerHTML;
-        backupBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> 备份中...';
+        backupBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> 分片备份中...';
         try {
-            const resp = await fetch('https://textdb.online/update/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formBody
-            });
-            const json = await resp.json();
-            if (json.status === 1) showToast('✅ 云端备份成功！', 2000);
-            else throw new Error(json.message || 'API返回失败');
+            if (totalLen <= MAX_VALUE_SIZE) {
+                // 小数据直接存主KEY，并清除可能残留的分片
+                await writeTextDB(masterKey, dataStr);
+                // 尝试删除旧分片（避免残留）
+                try {
+                    const oldMeta = await readTextDB(masterKey);
+                    if (oldMeta && oldMeta.startsWith('{"batches":')) {
+                        const meta = JSON.parse(oldMeta);
+                        if (meta.batches) {
+                            for (let i = 0; i < meta.batches; i++) {
+                                await writeTextDB(`${masterKey}_batch${i}`, '');
+                            }
+                        }
+                    }
+                } catch(e) {}
+                showToast(`✅ 云端备份成功 (单片)`, 2000);
+            } else {
+                // 分片策略: 每片最多 180000 字符（留余量）
+                const CHUNK_SIZE = 180000;
+                const batchCount = Math.ceil(totalLen / CHUNK_SIZE);
+                // 写入主KEY元数据
+                await writeTextDB(masterKey, JSON.stringify({ batches: batchCount }));
+                // 分片写入
+                for (let i = 0; i < batchCount; i++) {
+                    const start = i * CHUNK_SIZE;
+                    const end = Math.min(start + CHUNK_SIZE, totalLen);
+                    const chunk = dataStr.substring(start, end);
+                    await writeTextDB(`${masterKey}_batch${i}`, chunk);
+                }
+                showToast(`✅ 云端备份成功 (分${batchCount}片)`, 3000);
+            }
         } catch (err) {
             console.error(err);
-            showToast('❌ 云端备份失败，将自动转为本地备份', 3000);
-            backupToLocal();
+            showToast(`❌ 云端备份失败: ${err.message}，已自动转为本地备份`, 4000);
+            backupToLocal(); // fallback 本地备份
         } finally {
             backupBtn.disabled = false;
             backupBtn.innerHTML = originalText;
         }
     }
+
+    // 从云端分片恢复
     async function restoreFromCloud() {
-        const key = document.getElementById('cloudKey').value.trim();
-        if (!isValidKey(key)) { showToast('云KEY格式不正确', 3000); return; }
+        const masterKey = document.getElementById('cloudKey').value.trim();
+        if (!/^[0-9a-zA-Z\-_]{6,60}$/.test(masterKey)) {
+            showToast('主KEY格式不正确', 3000);
+            return;
+        }
         const restoreBtn = document.getElementById('restoreFromCloudBtn');
         restoreBtn.disabled = true;
         const originalText = restoreBtn.innerHTML;
-        restoreBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> 恢复中...';
+        restoreBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> 分片恢复中...';
         try {
-            const resp = await fetch(`https://textdb.online/${encodeURIComponent(key)}`, { method: 'GET' });
-            const text = await resp.text();
-            if (!text || text.trim() === '') { showToast('云端无数据或KEY不存在，无法恢复', 3000); return; }
-            let parsed;
-            try { parsed = JSON.parse(text); } catch(e) { throw new Error('云端数据损坏'); }
-            if (!Array.isArray(parsed)) throw new Error('数据格式错误');
+            const masterData = await readTextDB(masterKey);
+            if (!masterData || masterData.trim() === '') {
+                showToast('云端无数据或KEY不存在', 3000);
+                return;
+            }
+            let fullData = '';
+            // 尝试解析元数据
+            if (masterData.trim().startsWith('{') && masterData.includes('"batches"')) {
+                let meta;
+                try { meta = JSON.parse(masterData); } catch(e) { meta = null; }
+                if (meta && meta.batches && typeof meta.batches === 'number') {
+                    const batchCount = meta.batches;
+                    const chunks = [];
+                    for (let i = 0; i < batchCount; i++) {
+                        const chunk = await readTextDB(`${masterKey}_batch${i}`);
+                        if (chunk === null) throw new Error(`缺少分片 _batch${i}`);
+                        chunks.push(chunk);
+                    }
+                    fullData = chunks.join('');
+                } else {
+                    fullData = masterData;
+                }
+            } else {
+                fullData = masterData;
+            }
+            if (!fullData) throw new Error('数据为空');
+            const parsed = JSON.parse(fullData);
+            if (!Array.isArray(parsed)) throw new Error('数据格式不是数组');
             if (confirm(`从云端恢复将覆盖当前所有网站，确定吗？共有 ${parsed.length} 个站点。`)) {
                 sites = parsed;
                 saveToLocal();
@@ -588,12 +628,14 @@
                 showToast(`🌐 已从云端恢复 ${parsed.length} 个站点`, 2000);
             }
         } catch (err) {
-            showToast('恢复失败: ' + err.message, 3000);
+            showToast(`恢复失败: ${err.message}`, 4000);
+            console.error(err);
         } finally {
             restoreBtn.disabled = false;
             restoreBtn.innerHTML = originalText;
         }
     }
+
     function generateRandomKey() {
         const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_';
         let result = '';
@@ -601,6 +643,7 @@
         document.getElementById('cloudKey').value = result;
         showToast('已生成随机KEY，建议保存', 1500);
     }
+
     function backupToLocal() {
         const dataStr = JSON.stringify(sites, null, 2);
         const blob = new Blob([dataStr], { type: 'application/json' });
@@ -651,40 +694,26 @@
         document.getElementById('addUrl').addEventListener('keypress', e => { if(e.key === 'Enter') autoFillByUrl(); });
         document.getElementById('addName').addEventListener('keypress', e => { if(e.key === 'Enter') addSite(); });
         initSearchEngine();
+
+        // 备份按钮
         document.getElementById('backupToCloudBtn').addEventListener('click', backupToCloud);
         document.getElementById('restoreFromCloudBtn').addEventListener('click', restoreFromCloud);
         document.getElementById('genRandomKeyBtn').addEventListener('click', generateRandomKey);
         document.getElementById('backupToLocalBtn').addEventListener('click', backupToLocal);
         document.getElementById('restoreFromLocalBtn').addEventListener('click', triggerLocalRestore);
         document.getElementById('localRestoreFile').addEventListener('change', e => { if(e.target.files.length) handleLocalRestore(e.target.files[0]); e.target.value=''; });
-        
+
+        // 编辑/删除模式
         const editBtn = document.getElementById('editModeBtn');
         const delBtn = document.getElementById('deleteModeBtn');
-        editBtn.addEventListener('click', () => {
-            if (editMode) exitEditMode();
-            else enterEditMode();
-        });
-        delBtn.addEventListener('click', () => {
-            if (deleteMode) {
-                if (selectedIds.size > 0) confirmDeleteSelected();
-                else exitDeleteMode(true);
-            } else enterDeleteMode();
-        });
+        editBtn.addEventListener('click', () => { if (editMode) exitEditMode(); else enterEditMode(); });
+        delBtn.addEventListener('click', () => { if (deleteMode) { if (selectedIds.size > 0) confirmDeleteSelected(); else exitDeleteMode(true); } else enterDeleteMode(); });
 
+        // 排序
         const sortByName = document.getElementById('sortByNameBtn');
         const sortByFreq = document.getElementById('sortByFreqBtn');
-        sortByName.addEventListener('click', () => {
-            currentSort = 'name';
-            sortByName.classList.add('active');
-            sortByFreq.classList.remove('active');
-            applySortAndRender();
-        });
-        sortByFreq.addEventListener('click', () => {
-            currentSort = 'frequency';
-            sortByFreq.classList.add('active');
-            sortByName.classList.remove('active');
-            applySortAndRender();
-        });
+        sortByName.addEventListener('click', () => { currentSort = 'name'; sortByName.classList.add('active'); sortByFreq.classList.remove('active'); applySortAndRender(); });
+        sortByFreq.addEventListener('click', () => { currentSort = 'frequency'; sortByFreq.classList.add('active'); sortByName.classList.remove('active'); applySortAndRender(); });
         sortByName.classList.add('active');
     }
 
