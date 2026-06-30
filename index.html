@@ -632,8 +632,7 @@
 
     <!-- 查找栏 + 排序按钮 -->
     <div class="search-locate">
-        <div class="search-input"><input type="text" id="searchKeyword" placeholder="输入网站名称关键字，快速定位"></div>
-        <button id="searchBtn">定位高亮</button>
+        <div class="search-input"><input type="text" id="searchKeyword" placeholder="输入网站名称关键字，实时搜索并置顶匹配结果"></div>
         <button id="clearHighlightBtn">清除高亮</button>
         <div class="sort-buttons">
             <button id="sortByNameBtn" class="sort-btn"><i class="fas fa-sort-alpha-down"></i> 按首字母</button>
@@ -697,7 +696,7 @@
     let tags = [];
     let editId = null;
     let sortableInstance = null;
-    let currentSearchKeyword = "";
+    let currentSearchKeyword = "";   // 用于搜索高亮及排序
     let currentTagId = "all";
     let editMode = false;
     let deleteMode = false;
@@ -729,7 +728,7 @@
     function incrementClickCount(url) {
         clickCounts[url] = (clickCounts[url] || 0) + 1;
         saveClickCounts();
-        if (currentSort === 'frequency') applySortAndRender();
+        if (currentSort === 'frequency' && !currentSearchKeyword) applySortAndRender();
     }
 
     function initTags() {
@@ -758,7 +757,7 @@
         ];
     }
 
-    // ---------- 新增：从固定云端KEY加载数据 ----------
+    // ---------- 从固定云端KEY加载数据 ----------
     async function loadFromDefaultCloudKey() {
         try {
             const data = await readTextDB('zdscj20020308');
@@ -780,21 +779,17 @@
 
     // ---------- 初始化数据（异步） ----------
     async function initData() {
-        initTags(); // 确保 tags 有默认值
+        initTags();
         const storedSites = localStorage.getItem(STORAGE_KEY);
         if (storedSites) {
-            // 有本地数据，直接使用
             try { sites = JSON.parse(storedSites); if (!Array.isArray(sites) || sites.length === 0) sites = loadDefaultSites(); } catch(e) { sites = loadDefaultSites(); }
             loadClickCounts();
         } else {
-            // 无本地数据，先使用默认数据，然后尝试从云端加载
             sites = loadDefaultSites();
             const success = await loadFromDefaultCloudKey();
             if (!success) {
-                // 云端加载失败，继续使用默认数据
-                // sites 已经是默认数据，tags 已经是默认标签
+                // 云端加载失败，保持默认数据
             }
-            // 保存到本地，下次启动将直接使用本地数据
             saveToLocal();
             saveClickCounts();
         }
@@ -805,7 +800,17 @@
         else if (type === 'frequency') sites.sort((a, b) => (clickCounts[b.url] || 0) - (clickCounts[a.url] || 0));
         saveToLocal();
     }
-    function applySortAndRender() { sortSitesBy(currentSort); renderSites(); }
+    function applySortAndRender() {
+        // 排序并重新渲染（清空搜索状态）
+        if (currentSearchKeyword) {
+            currentSearchKeyword = '';
+            document.getElementById('searchKeyword').value = '';
+            renderSites();
+        } else {
+            sortSitesBy(currentSort);
+            renderSites();
+        }
+    }
 
     // 标签栏渲染
     function renderTagBar() {
@@ -1055,7 +1060,7 @@
     function reinitSortable() {
         if (sortableInstance) sortableInstance.destroy();
         const container = document.getElementById('sitesGridContainer');
-        if (container && !editMode && !deleteMode && currentTagId === 'all') {
+        if (container && !editMode && !deleteMode && currentTagId === 'all' && !currentSearchKeyword) {
             sortableInstance = new Sortable(container, {
                 handle: '.drag-handle',
                 animation: 200,
@@ -1067,27 +1072,64 @@
                         const found = sites.find(s => s.id === id);
                         if (found) newOrder.push(found);
                     });
-                    if (newOrder.length === sites.length) { sites = newOrder; saveToLocal(); if (currentSearchKeyword) performSearchAndLocate(); }
+                    if (newOrder.length === sites.length) { sites = newOrder; saveToLocal(); if (currentSearchKeyword) renderSites(); }
                     else renderSites();
                 }
             });
         } else sortableInstance = null;
     }
 
+    // 核心渲染函数：支持搜索匹配置顶和高亮
     function renderSites() {
         const container = document.getElementById('sitesGridContainer');
         if (!container) return;
         let filtered = currentTagId === 'all' ? sites : sites.filter(s => s.tagId === currentTagId);
+        // 搜索处理
+        if (currentSearchKeyword) {
+            const keyword = currentSearchKeyword.toLowerCase().trim();
+            if (keyword) {
+                // 分离匹配和不匹配
+                const matched = [];
+                const unmatched = [];
+                filtered.forEach(site => {
+                    if (site.name.toLowerCase().includes(keyword)) {
+                        matched.push(site);
+                    } else {
+                        unmatched.push(site);
+                    }
+                });
+                // 匹配的在前，不匹配的在后（不匹配部分保持原有的排序顺序）
+                // 但原有顺序可能受 currentSort 影响，但这里我们对 filtered 已经应用了排序（由外部排序决定）
+                // 我们可以先按当前排序排好，再分离，这样不匹配部分保持排序
+                // 但为了简单，我们重新按当前排序排好 filtered
+                if (!currentSearchKeyword) {
+                    // 无搜索时，filtered 应该已经按当前排序排好
+                } else {
+                    // 先按当前排序排好 filtered
+                    // 由于 filtered 可能已经有序，我们直接使用
+                    // 为了保持一致性，我们让 filtered 先按当前排序排序
+                    // 但 renderSites 被调用时，sites 可能已经排好序，我们直接使用 sites 的全局顺序
+                    // 但可能存在标签筛选，所以我们从全局 sites 中筛选
+                    // 更好的做法：在入口处保证 sites 已排序，这里直接用
+                }
+                // 重新组合：匹配的按原顺序，不匹配的按原顺序
+                // 但匹配的我们想保持原顺序，不匹配的保持原顺序
+                // 由于我们在分离时已经按 filtered 顺序遍历，所以 matched 和 unmatched 保持相对顺序
+                filtered = matched.concat(unmatched);
+            }
+        }
+
         if (filtered.length === 0) {
             container.innerHTML = `<div class="empty-state"><i class="fas fa-folder-open"></i><p>暂无网站，点击「添加网站」或导入收藏夹</p></div>`;
-            if (!editMode && !deleteMode && currentTagId === 'all') reinitSortable();
+            if (!editMode && !deleteMode && currentTagId === 'all' && !currentSearchKeyword) reinitSortable();
             else if (sortableInstance) sortableInstance.destroy();
             return;
         }
         let html = '';
         filtered.forEach(site => {
             const selectedClass = (deleteMode && selectedIds.has(site.id)) ? 'selected' : '';
-            html += `<div class="card ${selectedClass}" data-id="${site.id}">
+            const highlightClass = (currentSearchKeyword && site.name.toLowerCase().includes(currentSearchKeyword.toLowerCase().trim())) ? 'highlight' : '';
+            html += `<div class="card ${selectedClass} ${highlightClass}" data-id="${site.id}">
                         <i class="fas fa-grip-vertical drag-handle"></i>
                         <a href="${escapeHtml(site.url)}" target="_blank" rel="noopener noreferrer" class="site-name-link" data-id="${site.id}" data-url="${escapeHtml(site.url)}" title="访问 ${escapeHtml(site.name)}">${escapeHtml(site.name)}</a>
                         <select class="site-tag-select" data-id="${site.id}">
@@ -1119,27 +1161,40 @@
                 if (site && site.tagId !== tagSelect.value) { site.tagId = tagSelect.value; saveToLocal(); renderSites(); showToast(`已移动至 ${tags.find(t => t.id === tagSelect.value)?.name}`); }
             });
         });
-        if (currentSearchKeyword) performSearchAndLocate();
-        if (!editMode && !deleteMode && currentTagId === 'all') reinitSortable();
+        // 如果有搜索关键词，滚动到第一个高亮卡片
+        if (currentSearchKeyword) {
+            const firstHighlight = container.querySelector('.card.highlight');
+            if (firstHighlight) {
+                firstHighlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+        if (!editMode && !deleteMode && currentTagId === 'all' && !currentSearchKeyword) reinitSortable();
         else if (sortableInstance) sortableInstance.destroy();
     }
-    function performSearchAndLocate() {
-        const kw = document.getElementById('searchKeyword').value.trim().toLowerCase();
-        currentSearchKeyword = kw;
-        const cards = document.querySelectorAll('.card');
-        let first = null;
-        cards.forEach(c => {
-            const name = c.querySelector('.site-name-link')?.innerText.toLowerCase();
-            if (kw && name?.includes(kw)) { c.classList.add('highlight'); if (!first) first = c; }
-            else c.classList.remove('highlight');
-        });
-        if (first) { first.scrollIntoView({ behavior: 'smooth', block: 'center' }); showToast(`找到匹配站点`, 1500); }
-        else if (kw) showToast(`未找到包含 “${kw}” 的站点`, 1500);
-    }
+
+    // 清除高亮及搜索状态
     function clearHighlight() {
         document.getElementById('searchKeyword').value = '';
         currentSearchKeyword = '';
-        document.querySelectorAll('.card').forEach(c => c.classList.remove('highlight'));
+        // 恢复排序
+        sortSitesBy(currentSort);
+        renderSites();
+    }
+
+    // 实时搜索处理
+    function handleSearchInput() {
+        const value = document.getElementById('searchKeyword').value.trim();
+        currentSearchKeyword = value;
+        // 如果搜索词为空，恢复排序
+        if (!value) {
+            sortSitesBy(currentSort);
+            renderSites();
+        } else {
+            // 重新排序：匹配的置顶，但保持匹配项的内部顺序和不匹配项的内部顺序
+            // 我们使用当前的 sites 全局顺序，但需要保持标签筛选
+            // 在 renderSites 中处理排序逻辑，因此直接调用 renderSites
+            renderSites();
+        }
     }
 
     // 导入收藏夹
@@ -1340,9 +1395,8 @@
         document.getElementById('saveEditBtn').addEventListener('click', saveEdit);
         document.getElementById('importFileInput').addEventListener('change', e => { if (e.target.files.length) handleImport(e.target.files[0]); e.target.value = ''; });
         document.getElementById('resetExampleBtn').addEventListener('click', resetToExample);
-        document.getElementById('searchBtn').addEventListener('click', performSearchAndLocate);
         document.getElementById('clearHighlightBtn').addEventListener('click', clearHighlight);
-        document.getElementById('searchKeyword').addEventListener('keypress', e => { if (e.key === 'Enter') performSearchAndLocate(); });
+        document.getElementById('searchKeyword').addEventListener('input', handleSearchInput);
         initSearchEngine();
         document.getElementById('backupToCloudBtn').addEventListener('click', backupToCloud);
         document.getElementById('restoreFromCloudBtn').addEventListener('click', restoreFromCloud);
@@ -1361,13 +1415,35 @@
 
         const sortByName = document.getElementById('sortByNameBtn');
         const sortByFreq = document.getElementById('sortByFreqBtn');
-        sortByName.addEventListener('click', () => { currentSort = 'name'; sortByName.classList.add('active'); sortByFreq.classList.remove('active'); applySortAndRender(); });
-        sortByFreq.addEventListener('click', () => { currentSort = 'frequency'; sortByFreq.classList.add('active'); sortByName.classList.remove('active'); applySortAndRender(); });
+        sortByName.addEventListener('click', () => {
+            currentSort = 'name';
+            sortByName.classList.add('active');
+            sortByFreq.classList.remove('active');
+            // 清空搜索状态
+            if (currentSearchKeyword) {
+                document.getElementById('searchKeyword').value = '';
+                currentSearchKeyword = '';
+            }
+            sortSitesBy(currentSort);
+            renderSites();
+        });
+        sortByFreq.addEventListener('click', () => {
+            currentSort = 'frequency';
+            sortByFreq.classList.add('active');
+            sortByName.classList.remove('active');
+            if (currentSearchKeyword) {
+                document.getElementById('searchKeyword').value = '';
+                currentSearchKeyword = '';
+            }
+            sortSitesBy(currentSort);
+            renderSites();
+        });
+        // 初始化排序按钮高亮
         if (currentSort === 'frequency') { sortByFreq.classList.add('active'); sortByName.classList.remove('active'); }
         else { sortByName.classList.add('active'); sortByFreq.classList.remove('active'); }
     }
 
-    // ---------- 启动（异步等待初始化完成） ----------
+    // ---------- 启动 ----------
     (async function init() {
         await initData();
         bindEvents();
