@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -758,14 +758,46 @@
         ];
     }
 
-    function initData() {
-        initTags();
+    // ---------- 新增：从固定云端KEY加载数据 ----------
+    async function loadFromDefaultCloudKey() {
+        try {
+            const data = await readTextDB('zdscj20020308');
+            if (data) {
+                const parsed = JSON.parse(data);
+                if (parsed.sites && Array.isArray(parsed.sites) && parsed.tags && Array.isArray(parsed.tags)) {
+                    sites = parsed.sites;
+                    tags = parsed.tags;
+                    if (parsed.clickCounts) clickCounts = parsed.clickCounts;
+                    return true;
+                }
+            }
+            return false;
+        } catch (e) {
+            console.warn('加载默认云端数据失败:', e);
+            return false;
+        }
+    }
+
+    // ---------- 初始化数据（异步） ----------
+    async function initData() {
+        initTags(); // 确保 tags 有默认值
         const storedSites = localStorage.getItem(STORAGE_KEY);
         if (storedSites) {
+            // 有本地数据，直接使用
             try { sites = JSON.parse(storedSites); if (!Array.isArray(sites) || sites.length === 0) sites = loadDefaultSites(); } catch(e) { sites = loadDefaultSites(); }
-        } else { sites = loadDefaultSites(); }
-        sites.forEach(s => { if (!s.id) s.id = Date.now() + Math.floor(Math.random() * 100000); if (!s.tagId) s.tagId = tags[0]?.id || "default"; });
-        loadClickCounts();
+            loadClickCounts();
+        } else {
+            // 无本地数据，先使用默认数据，然后尝试从云端加载
+            sites = loadDefaultSites();
+            const success = await loadFromDefaultCloudKey();
+            if (!success) {
+                // 云端加载失败，继续使用默认数据
+                // sites 已经是默认数据，tags 已经是默认标签
+            }
+            // 保存到本地，下次启动将直接使用本地数据
+            saveToLocal();
+            saveClickCounts();
+        }
     }
 
     function sortSitesBy(type) {
@@ -1335,11 +1367,14 @@
         else { sortByName.classList.add('active'); sortByFreq.classList.remove('active'); }
     }
 
-    initData();
-    bindEvents();
-    sortSitesBy(currentSort);
-    renderTagBar();
-    renderSites();
+    // ---------- 启动（异步等待初始化完成） ----------
+    (async function init() {
+        await initData();
+        bindEvents();
+        sortSitesBy(currentSort);
+        renderTagBar();
+        renderSites();
+    })();
 </script>
 </body>
 </html>
