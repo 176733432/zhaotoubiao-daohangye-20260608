@@ -120,127 +120,47 @@
         }
         .email-select-wrapper select:hover { border-color: #bcb09b; }
 
-        /* ========== 醒目搜索栏 ========== */
+        /* 醒目搜索栏 */
         .toolbar {
-            background: #fefaf5;
-            border-radius: 60px;
-            padding: 8px 16px;
-            margin-bottom: 24px;
-            border: 1px solid #e2dcd0;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 12px;
+            background: #fefaf5; border-radius: 60px; padding: 8px 16px; margin-bottom: 24px;
+            border: 1px solid #e2dcd0; display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
         }
-
         .search-bar {
-            flex: 2;
-            min-width: 280px;
-            display: flex;
-            align-items: center;
-            background: #ffffff;
-            border-radius: 60px;
-            border: 2.5px solid #6e8c6a;
-            padding: 4px 4px 4px 20px;
-            gap: 8px;
-            box-shadow: 0 4px 14px rgba(110, 140, 106, 0.15);
+            flex: 2; min-width: 280px; display: flex; align-items: center;
+            background: #ffffff; border-radius: 60px; border: 2.5px solid #6e8c6a;
+            padding: 4px 4px 4px 20px; gap: 8px; box-shadow: 0 4px 14px rgba(110, 140, 106, 0.15);
             transition: all 0.25s ease;
         }
-        .search-bar:hover {
-            border-color: #5c7858;
-            box-shadow: 0 4px 20px rgba(110, 140, 106, 0.25);
-        }
-        .search-bar:focus-within {
-            border-color: #3b5a37;
-            box-shadow: 0 0 0 4px rgba(110, 140, 106, 0.2), 0 4px 24px rgba(110, 140, 106, 0.3);
-        }
-
+        .search-bar:hover { border-color: #5c7858; box-shadow: 0 4px 20px rgba(110, 140, 106, 0.25); }
+        .search-bar:focus-within { border-color: #3b5a37; box-shadow: 0 0 0 4px rgba(110, 140, 106, 0.2), 0 4px 24px rgba(110, 140, 106, 0.3); }
         .search-bar select {
-            border: none;
-            background: transparent;
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: #4a5a45;
-            cursor: pointer;
-            outline: none;
-            padding: 8px 4px;
-            border-right: 1px solid #d9d0c0;
-            padding-right: 12px;
+            border: none; background: transparent; font-size: 0.9rem; font-weight: 500; color: #4a5a45;
+            cursor: pointer; outline: none; padding: 8px 4px; border-right: 1px solid #d9d0c0; padding-right: 12px;
         }
-
         .search-bar input {
-            flex: 1;
-            border: none;
-            background: transparent;
-            padding: 12px 0;
-            font-size: 1.05rem;
-            outline: none;
-            color: #2c3e2f;
-            min-width: 100px;
-            font-weight: 500;
+            flex: 1; border: none; background: transparent; padding: 12px 0; font-size: 1.05rem;
+            outline: none; color: #2c3e2f; min-width: 100px; font-weight: 500;
         }
-        .search-bar input::placeholder {
-            color: #b2aa98;
-            font-weight: 400;
-        }
-
+        .search-bar input::placeholder { color: #b2aa98; font-weight: 400; }
         .search-bar button {
-            background: #6e8c6a;
-            border: none;
-            color: white;
-            padding: 10px 26px;
-            border-radius: 60px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: 0.25s;
-            white-space: nowrap;
-            letter-spacing: 0.3px;
+            background: #6e8c6a; border: none; color: white; padding: 10px 26px;
+            border-radius: 60px; font-weight: 600; font-size: 0.95rem; cursor: pointer;
+            transition: 0.25s; white-space: nowrap; letter-spacing: 0.3px;
         }
-        .search-bar button:hover {
-            background: #5c7858;
-            transform: scale(1.02);
-        }
-        .search-bar button:active {
-            transform: scale(0.97);
-        }
+        .search-bar button:hover { background: #5c7858; transform: scale(1.02); }
+        .search-bar button:active { transform: scale(0.97); }
 
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-left: auto;
-        }
+        .action-buttons { display: flex; gap: 8px; flex-wrap: wrap; margin-left: auto; }
         .btn-outline {
-            background: #fefaf5;
-            border: 1px solid #d9d0c0;
-            padding: 6px 14px;
-            border-radius: 60px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: #4a5a45;
-            transition: 0.2s;
-            white-space: nowrap;
+            background: #fefaf5; border: 1px solid #d9d0c0; padding: 6px 14px; border-radius: 60px;
+            font-size: 0.8rem; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+            color: #4a5a45; transition: 0.2s; white-space: nowrap;
         }
         .btn-outline:hover { background: #f3efe8; border-color: #bcb09b; color: #3b5a37; }
-
         .sort-buttons { display: flex; gap: 8px; align-items: center; }
         .sort-btn {
-            background: #fefaf5;
-            border: 1px solid #d9d0c0;
-            padding: 6px 14px;
-            border-radius: 60px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: #4a5a45;
+            background: #fefaf5; border: 1px solid #d9d0c0; padding: 6px 14px; border-radius: 60px;
+            font-size: 0.8rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px; color: #4a5a45;
         }
         .sort-btn.active { background: #6e8c6a; color: white; border-color: #6e8c6a; }
         .sort-btn:hover { background: #e6dfd4; border-color: #bcb09b; }
@@ -380,6 +300,12 @@
         .key-status .dot.custom { background: #c47b5e; }
         .key-status .dot.error { background: #e03a3a; }
 
+        /* 提示小标签 */
+        .paste-hint {
+            font-size: 0.7rem; color: #b2aa98; margin-top: 4px;
+        }
+        .paste-hint i { color: #6e8c6a; }
+
         @media (max-width: 680px) {
             body { padding: 16px; }
             .top-header { flex-direction: column; align-items: stretch; gap: 12px; }
@@ -453,7 +379,7 @@
         </div>
     </div>
 
-    <!-- ===== 醒目搜索栏 ===== -->
+    <!-- 醒目搜索栏 -->
     <div class="toolbar">
         <div class="search-bar">
             <select id="engineSelect">
@@ -480,7 +406,7 @@
     <div class="tag-manager">
         <div class="tag-list" id="tagListContainer"></div>
         <div class="tag-actions">
-            <button id="addTagBtn" class="btn-tag"><i class="fas fa-tag"></i> 新建标签</button>
+            <!-- 已移除“新建标签”按钮，仅保留管理标签 -->
             <button id="manageTagsBtn" class="btn-tag"><i class="fas fa-cog"></i> 管理标签</button>
         </div>
     </div>
@@ -510,14 +436,29 @@
     </div>
 </div>
 
-<!-- 添加网站弹窗 -->
-<div id="addSiteModal" class="modal"><div class="modal-content"><h3 style="margin-bottom: 16px;"><i class="fas fa-plus-circle"></i> 添加投标网站</h3>
-    <div class="input-group"><label>网址 URL *</label><input type="text" id="modalAddUrl" placeholder="https://..."></div>
-    <div class="input-group"><label>网站名称</label><input type="text" id="modalAddName" placeholder="自动获取或手动填写"></div>
-    <div class="input-group"><label>所属标签</label><select id="modalTagSelect"></select></div>
-    <div style="margin-bottom: 16px;"><button id="modalFetchInfoBtn" class="btn-secondary" style="width:100%;">🌐 获取网页标题</button></div>
-    <div class="modal-buttons"><button id="closeModalBtn" class="btn-secondary">取消</button><button id="modalAddSiteBtn" class="btn-primary">添加</button></div>
-</div></div>
+<!-- 添加网站弹窗（已移除"获取网页标题"按钮） -->
+<div id="addSiteModal" class="modal">
+    <div class="modal-content">
+        <h3 style="margin-bottom: 16px;"><i class="fas fa-plus-circle"></i> 添加投标网站</h3>
+        <div class="input-group">
+            <label>网址 URL *</label>
+            <input type="text" id="modalAddUrl" placeholder="https://... 或 粘贴'标题+网址'">
+            <div class="paste-hint"><i class="fas fa-lightbulb"></i> 支持粘贴浏览器地址栏右键复制的「标题+网址」</div>
+        </div>
+        <div class="input-group">
+            <label>网站名称</label>
+            <input type="text" id="modalAddName" placeholder="自动获取或手动填写">
+        </div>
+        <div class="input-group">
+            <label>所属标签</label>
+            <select id="modalTagSelect"></select>
+        </div>
+        <div class="modal-buttons">
+            <button id="closeModalBtn" class="btn-secondary">取消</button>
+            <button id="modalAddSiteBtn" class="btn-primary">添加</button>
+        </div>
+    </div>
+</div>
 
 <!-- 编辑网站弹窗 -->
 <div id="editModal" class="modal"><div class="modal-content"><h3 style="margin-bottom: 16px;"><i class="fas fa-pen-alt"></i> 编辑站点</h3>
@@ -618,11 +559,33 @@
     const CUSTOM_STYLE_KEY = 'tender_nav_custom_style';
     const API_KEY_KEY = 'tender_nav_api_key';
 
-    // ----- 明文默认密钥 (已配置域名白名单，直接使用) -----
     const DEFAULT_API_KEY = 'txxvS89xaHq8BZ3RwAjxKcFB0S';
 
     let calendarData = null;
     let searchDebounceTimer = null;
+
+    // ----- 智能粘贴解析函数 -----
+    function parseTitleUrl(text) {
+        const urlMatch = text.match(/(https?:\/\/[^\s]+)/);
+        if (!urlMatch) {
+            return { title: text.trim(), url: '' };
+        }
+        const url = urlMatch[0];
+        let titlePart = text.substring(0, urlMatch.index).trim();
+        if (!titlePart) {
+            titlePart = text.substring(urlMatch.index + url.length).trim();
+        }
+        titlePart = titlePart.replace(/[\|\-—–]\s*$/, '').trim();
+        if (!titlePart) {
+            try {
+                const domain = new URL(url).hostname.replace(/^www\./, '');
+                titlePart = domain;
+            } catch(e) {
+                titlePart = url;
+            }
+        }
+        return { title: titlePart, url: url };
+    }
 
     // ----- 获取当前使用的密钥 -----
     function getApiKey() {
@@ -1068,9 +1031,13 @@
     document.getElementById('dateArea').addEventListener('click', showCalendar);
     document.getElementById('closeCalendarBtn').addEventListener('click', closeCalendar);
 
+    // 修改：点击模态框外部不关闭添加网站对话框，只关闭其他
     window.addEventListener('click', function(e) {
-        if (e.target === document.getElementById('calendarModal')) closeCalendar();
+        if (e.target === document.getElementById('editModal')) closeEditModal();
+        if (e.target === document.getElementById('manageTagsModal')) document.getElementById('manageTagsModal').style.display = 'none';
         if (e.target === document.getElementById('customModal')) closeCustomModal();
+        if (e.target === document.getElementById('calendarModal')) closeCalendar();
+        // 注意：addSiteModal 外部点击不做任何事，只有点击取消按钮才关闭
     });
 
     // ---------- 辅助函数 ----------
@@ -1252,45 +1219,34 @@
         document.getElementById('manageTagsModal').style.display = 'flex';
     }
 
-    // 网站操作
-    async function fetchWebsiteTitleFromUrl(rawUrl) {
-        let fullUrl = rawUrl.trim();
-        if (!fullUrl.startsWith('http')) fullUrl = 'https://' + fullUrl;
-        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(fullUrl)}`;
-        try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 10000);
-            const response = await fetch(proxyUrl, { signal: controller.signal });
-            clearTimeout(timeoutId);
-            if (!response.ok) throw new Error();
-            const html = await response.text();
-            const doc = new DOMParser().parseFromString(html, 'text/html');
-            let title = doc.querySelector('title')?.innerText?.trim();
-            if (title) return title.replace(/\s+/g, ' ').substring(0, 80);
-            return null;
-        } catch (err) {
-            try { return new URL(fullUrl).hostname.replace(/^www\./, ''); } catch(e) { return null; }
+    // ----- 智能粘贴：监听网址输入框的粘贴事件 -----
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlInput = document.getElementById('modalAddUrl');
+        const nameInput = document.getElementById('modalAddName');
+
+        if (urlInput) {
+            urlInput.addEventListener('paste', function(e) {
+                const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+                if (!pastedText) return;
+                const parsed = parseTitleUrl(pastedText);
+                if (parsed.url) {
+                    this.value = parsed.url;
+                    if (!nameInput.value.trim()) {
+                        nameInput.value = parsed.title;
+                        showToast('✅ 已自动分离标题和网址', 1500);
+                    } else {
+                        showToast('✅ 已提取网址', 1200);
+                    }
+                    this.dispatchEvent(new Event('input'));
+                } else {
+                    showToast('未检测到有效网址，请手动输入', 1500);
+                }
+                e.preventDefault();
+            });
         }
-    }
+    });
 
-    async function modalAutoFill() {
-        let url = document.getElementById('modalAddUrl').value.trim();
-        if (!url) { showToast('请输入网址',1500); return; }
-        if (!url.startsWith('http')) url = 'https://' + url;
-        document.getElementById('modalAddUrl').value = url;
-        const btn = document.getElementById('modalFetchInfoBtn');
-        const orig = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> 获取中...';
-        btn.disabled = true;
-        try {
-            const title = await fetchWebsiteTitleFromUrl(url);
-            if (title) document.getElementById('modalAddName').value = title;
-            else document.getElementById('modalAddName').value = new URL(url).hostname.replace(/^www\./, '');
-            showToast('获取成功', 1500);
-        } catch(e) { showToast('获取失败', 1500); }
-        finally { btn.innerHTML = orig; btn.disabled = false; }
-    }
-
+    // ----- 网站操作（移除"获取网页标题"相关）-----
     function openAddModal() {
         const select = document.getElementById('modalTagSelect');
         select.innerHTML = tags.map(t => `<option value="${t.id}" ${currentTagId !== 'all' && currentTagId !== t.id ? '' : 'selected'}>${escapeHtml(t.name)}</option>`).join('');
@@ -1298,22 +1254,35 @@
         document.getElementById('modalAddUrl').value = '';
         document.getElementById('modalAddName').value = '';
     }
+
+    // 添加网站
     async function addSiteFromModal() {
         let url = document.getElementById('modalAddUrl').value.trim();
         let name = document.getElementById('modalAddName').value.trim();
         const tagId = document.getElementById('modalTagSelect').value;
-        if (!url) { showToast('请填写网址',1200); return; }
+        if (!url) { showToast('请填写网址', 1200); return; }
         if (!url.startsWith('http')) url = 'https://' + url;
-        if (!name) name = new URL(url).hostname.replace(/^www\./, '') || '未命名';
-        if (sites.some(s => s.url === url)) { showToast('网址已存在',1500); return; }
+        if (!name) {
+            try {
+                name = new URL(url).hostname.replace(/^www\./, '');
+            } catch(e) { name = '未命名'; }
+        }
+        if (sites.some(s => s.url === url)) { showToast('网址已存在', 1500); return; }
         const newId = Date.now() + Math.floor(Math.random() * 100000);
-        sites.push({ id: newId, name: name.substring(0,100), url, tagId });
+        sites.push({ id: newId, name: name.substring(0, 100), url, tagId });
         saveToLocal();
         applySortAndRender();
+        // 添加成功后关闭并清空
         closeAddModal();
         showToast(`✨ 已添加 ${name}`);
     }
-    function closeAddModal() { document.getElementById('addSiteModal').style.display = 'none'; }
+
+    // 关闭添加弹窗并清空输入框
+    function closeAddModal() {
+        document.getElementById('addSiteModal').style.display = 'none';
+        document.getElementById('modalAddUrl').value = '';
+        document.getElementById('modalAddName').value = '';
+    }
 
     function openEditModalById(id) {
         const site = sites.find(s => s.id === id);
@@ -1330,11 +1299,11 @@
         const newName = document.getElementById('editName').value.trim();
         let newUrl = document.getElementById('editUrl').value.trim();
         const newTagId = document.getElementById('editTagSelect').value;
-        if (!newName || !newUrl) { showToast('名称和网址不能为空',1200); return; }
+        if (!newName || !newUrl) { showToast('名称和网址不能为空', 1200); return; }
         if (!newUrl.startsWith('http')) newUrl = 'https://' + newUrl;
         const idx = sites.findIndex(s => s.id === editId);
         if (idx !== -1) {
-            if (sites.some(s => s.id !== editId && s.url === newUrl)) { showToast('网址已存在',1500); return; }
+            if (sites.some(s => s.id !== editId && s.url === newUrl)) { showToast('网址已存在', 1500); return; }
             sites[idx].name = newName;
             sites[idx].url = newUrl;
             sites[idx].tagId = newTagId;
@@ -1346,7 +1315,7 @@
     }
     function closeEditModal() { document.getElementById('editModal').style.display = 'none'; editId = null; }
 
-    // 删除模式
+    // 删除模式（保持不变）
     function enterDeleteMode() {
         if (editMode) exitEditMode();
         deleteMode = true;
@@ -1716,13 +1685,16 @@
         document.getElementById('openCustomModalBtn').addEventListener('click', openCustomModal);
         document.getElementById('closeCustomBtn').addEventListener('click', closeCustomModal);
 
+        // 添加网站弹窗
         document.getElementById('openAddSiteModalBtn').addEventListener('click', openAddModal);
-        document.getElementById('closeModalBtn').addEventListener('click', () => document.getElementById('addSiteModal').style.display = 'none');
+        document.getElementById('closeModalBtn').addEventListener('click', closeAddModal);
         document.getElementById('modalAddSiteBtn').addEventListener('click', addSiteFromModal);
-        document.getElementById('modalFetchInfoBtn').addEventListener('click', modalAutoFill);
-        window.addEventListener('click', e => { if (e.target === document.getElementById('addSiteModal')) closeAddModal(); if (e.target === document.getElementById('editModal')) closeEditModal(); if (e.target === document.getElementById('manageTagsModal')) document.getElementById('manageTagsModal').style.display = 'none'; });
+
+        // 编辑弹窗
         document.getElementById('closeEditModalBtn').addEventListener('click', closeEditModal);
         document.getElementById('saveEditBtn').addEventListener('click', saveEdit);
+
+        // 其他
         document.getElementById('importFileInput').addEventListener('change', e => { if (e.target.files.length) handleImport(e.target.files[0]); e.target.value = ''; });
         document.getElementById('clearAllSitesBtn').addEventListener('click', clearAllSites);
         document.getElementById('backupToCloudBtn').addEventListener('click', backupToCloud);
@@ -1731,7 +1703,7 @@
         document.getElementById('backupToLocalBtn').addEventListener('click', backupToLocal);
         document.getElementById('restoreFromLocalBtn').addEventListener('click', triggerLocalRestore);
         document.getElementById('localRestoreFile').addEventListener('change', e => { if (e.target.files.length) handleLocalRestore(e.target.files[0]); e.target.value = ''; });
-        document.getElementById('addTagBtn').addEventListener('click', addNewTag);
+        // 管理标签
         document.getElementById('manageTagsBtn').addEventListener('click', showManageTags);
         document.getElementById('closeManageTagsBtn').addEventListener('click', () => document.getElementById('manageTagsModal').style.display = 'none');
 
