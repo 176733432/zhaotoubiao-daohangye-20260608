@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>投标导航 | 分类标签 · 云端备份</title>
+    <title>导航 | 可个性改造为专属导航 · 云端备份</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js">
     </script>
@@ -36,6 +36,7 @@
             align-items: center;
             justify-content: space-between;
             gap: 12px;
+            position: relative;
         }
         .header-left {
             display: flex;
@@ -97,73 +98,77 @@
             background: #f3efe8;
             color: #3b5a37;
         }
-        .date-area {
+        .header-right {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            font-size: 0.85rem;
-            color: #6f6a5c;
-            background: #f3efe8;
-            padding: 2px 14px;
-            border-radius: 60px;
-            white-space: nowrap;
-            cursor: pointer;
-            transition: 0.2s;
-            min-width: 120px;
-            border: 1px solid transparent;
-            line-height: 1.3;
+            gap: 12px;
+            flex-wrap: wrap;
         }
-        .date-area:hover {
+        .huangli-btn {
+            background: #f3efe8;
+            border: 1px solid #e2dcd0;
+            border-radius: 60px;
+            padding: 4px 14px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            color: #4a5a45;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: 0.2s;
+        }
+        .huangli-btn i {
+            font-size: 0.9rem;
+        }
+        .huangli-btn:hover {
             background: #e8e0d4;
             border-color: #bcb09b;
         }
-        .date-area .date-main {
-            font-weight: 500;
-        }
-        .date-area .date-lunar {
-            font-size: 0.7rem;
-            color: #8a7e6e;
-            margin-top: 1px;
-        }
-        .date-area .date-loading {
-            color: #b2aa98;
-            animation: pulse 1.2s ease-in-out infinite;
-        }
-        .date-area .date-error {
-            color: #c47b5e;
-            font-size: 0.65rem;
-        }
-        @keyframes pulse {
-            0%,
-            100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.4;
-            }
-        }
-        .date-calc {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .calc-date-btn {
             background: #f3efe8;
-            padding: 6px 16px;
-            border-radius: 60px;
             border: 1px solid #e2dcd0;
-            flex-wrap: wrap;
+            border-radius: 60px;
+            padding: 4px 14px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            color: #4a5a45;
+            transition: 0.2s;
+            white-space: nowrap;
         }
-        .date-calc .calc-item {
+        .calc-date-btn:hover {
+            background: #e8e0d4;
+            border-color: #bcb09b;
+        }
+        .date-calc-popup {
+            position: absolute;
+            top: 60px;
+            right: 24px;
+            background: #fefaf5;
+            border-radius: 28px;
+            padding: 16px 20px;
+            border: 1px solid #e2dcd0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            z-index: 50;
+            display: none;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+        }
+        .date-calc-popup.show {
+            display: flex;
+        }
+        .date-calc-popup .calc-item {
             display: flex;
             align-items: center;
             gap: 4px;
             font-size: 0.8rem;
             color: #4a5a45;
         }
-        .date-calc .calc-item label {
-            font-weight: 500;
+        .date-calc-popup .calc-item label {
             white-space: nowrap;
         }
-        .date-calc .calc-item input {
+        .date-calc-popup .calc-item input {
             border: 1px solid #d9d0c0;
             border-radius: 40px;
             padding: 4px 10px;
@@ -172,28 +177,20 @@
             background: white;
             width: 120px;
             color: #2c3e2f;
-            transition: border-color 0.2s;
         }
-        .date-calc .calc-item input:focus {
-            border-color: #6e8c6a;
-        }
-        .date-calc .calc-item input[type="number"] {
+        .date-calc-popup .calc-item input[type="number"] {
             width: 80px;
         }
-        .date-calc .calc-item input::placeholder {
-            color: #b2aa98;
-        }
-        .calc-divider {
+        .date-calc-popup .calc-divider {
             color: #b2aa98;
             font-size: 0.8rem;
-            user-select: none;
         }
         .calc-buttons {
             display: flex;
             gap: 6px;
-            margin-left: 4px;
         }
-        .calc-buttons button {
+        .btn-calc,
+        .btn-clear {
             border: none;
             border-radius: 40px;
             padding: 4px 14px;
@@ -201,18 +198,17 @@
             font-weight: 500;
             cursor: pointer;
             transition: 0.2s;
-            white-space: nowrap;
         }
         .btn-calc {
             background: #6e8c6a;
             color: white;
         }
-        .btn-calc:hover {
-            background: #5c7858;
-        }
         .btn-clear {
             background: #e6dfd4;
             color: #4a5a45;
+        }
+        .btn-calc:hover {
+            background: #5c7858;
         }
         .btn-clear:hover {
             background: #d5cdbe;
@@ -251,7 +247,7 @@
         }
         .search-bar {
             flex: 2;
-            min-width: 280px;
+            min-width: 260px;
             display: flex;
             align-items: center;
             background: #ffffff;
@@ -314,39 +310,15 @@
             background: #5c7858;
             transform: scale(1.02);
         }
-        .search-bar button:active {
-            transform: scale(0.97);
-        }
-        .action-buttons {
+        .toolbar-right {
             display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-left: auto;
-        }
-        .btn-outline {
-            background: #fefaf5;
-            border: 1px solid #d9d0c0;
-            padding: 6px 14px;
-            border-radius: 60px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            cursor: pointer;
-            display: inline-flex;
             align-items: center;
-            gap: 6px;
-            color: #4a5a45;
-            transition: 0.2s;
-            white-space: nowrap;
-        }
-        .btn-outline:hover {
-            background: #f3efe8;
-            border-color: #bcb09b;
-            color: #3b5a37;
+            gap: 10px;
+            flex-wrap: wrap;
         }
         .sort-buttons {
             display: flex;
             gap: 8px;
-            align-items: center;
         }
         .sort-btn {
             background: #fefaf5;
@@ -370,6 +342,61 @@
             background: #e6dfd4;
             border-color: #bcb09b;
         }
+        .operations-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .operations-btn {
+            background: #fefaf5;
+            border: 1px solid #d9d0c0;
+            padding: 6px 14px;
+            border-radius: 60px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4a5a45;
+            transition: 0.2s;
+        }
+        .operations-btn:hover {
+            background: #f3efe8;
+        }
+        .operations-dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 42px;
+            background: #fefaf5;
+            border-radius: 24px;
+            padding: 8px 0;
+            border: 1px solid #e2dcd0;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            min-width: 180px;
+        }
+        .operations-dropdown-content.show {
+            display: block;
+        }
+        .operations-dropdown-content button {
+            display: block;
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 8px 24px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-align: left;
+            color: #4a5a45;
+            transition: 0.1s;
+        }
+        .operations-dropdown-content button:hover {
+            background: #f3efe8;
+        }
+        .operations-dropdown-content .divider {
+            border-top: 1px solid #e2dcd0;
+            margin: 4px 0;
+        }
         .tag-manager {
             background: #fefaf5;
             border-radius: 32px;
@@ -377,16 +404,26 @@
             margin-bottom: 24px;
             border: 1px solid #e2dcd0;
             display: flex;
-            flex-wrap: wrap;
             align-items: center;
             gap: 12px;
             justify-content: space-between;
         }
+        .tag-list-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow: hidden;
+            flex: 1;
+        }
         .tag-list {
             display: flex;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             gap: 10px;
             align-items: center;
+            overflow: hidden;
+        }
+        .tag-list.expanded {
+            flex-wrap: wrap;
         }
         .tag-item {
             background: #f3efe8;
@@ -397,9 +434,11 @@
             cursor: pointer;
             border: 1px solid #e2dcd0;
             transition: 0.2s;
+            white-space: nowrap;
             display: flex;
             align-items: center;
             gap: 6px;
+            flex-shrink: 0;
         }
         .tag-item.active {
             background: #6e8c6a;
@@ -420,6 +459,20 @@
         .tag-item .del-tag:hover {
             opacity: 1;
         }
+        .tag-expand-btn {
+            background: #f3efe8;
+            border: 1px solid #e2dcd0;
+            border-radius: 60px;
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            color: #4a5a45;
+            flex-shrink: 0;
+            display: none;
+        }
+        .tag-actions {
+            flex-shrink: 0;
+        }
         .tag-actions .btn-tag {
             background: #f3efe8;
             border: 1px solid #d9d0c0;
@@ -435,31 +488,40 @@
         .backup-section {
             background: #fefaf5;
             border-radius: 32px;
-            padding: 16px 20px;
+            padding: 12px 20px;
             margin-top: 28px;
             border: 1px solid #e2dcd0;
             display: flex;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             align-items: center;
-            gap: 16px;
-            justify-content: space-between;
+            gap: 10px;
+        }
+        .backup-inner {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+            flex: 1;
+        }
+        .backup-inner.expanded {
+            flex-wrap: wrap;
         }
         .cloud-backup,
         .local-backup {
             display: flex;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
+            gap: 6px;
             background: #f3efe8;
-            padding: 6px 16px;
+            padding: 4px 12px;
             border-radius: 60px;
+            flex-shrink: 0;
         }
         .cloud-backup input {
             border: 1px solid #d9d0c0;
             border-radius: 60px;
-            padding: 6px 14px;
-            font-size: 0.8rem;
-            width: 160px;
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            width: 120px;
             outline: none;
             background: white;
             color: #2c3e2f;
@@ -468,50 +530,39 @@
         .local-backup button {
             background: white;
             border: 1px solid #d9d0c0;
-            padding: 5px 14px;
+            padding: 4px 10px;
             border-radius: 60px;
             cursor: pointer;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             transition: 0.2s;
             color: #4a5a45;
+            white-space: nowrap;
         }
         .cloud-backup button:hover,
         .local-backup button:hover {
             background: #e6dfd4;
-            border-color: #bcb09b;
         }
         .random-key-btn {
             background: #f3efe8;
             border: none;
-            padding: 5px 12px;
+            padding: 4px 8px;
             border-radius: 60px;
             font-size: 0.7rem;
             cursor: pointer;
         }
-        .edit-mode-bar {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        .edit-mode-btn,
-        .delete-mode-btn {
-            background: #6e8c6a;
-            color: white;
-            border: none;
-            padding: 6px 18px;
+        .backup-expand-btn {
+            background: #f3efe8;
+            border: 1px solid #e2dcd0;
             border-radius: 60px;
-            font-weight: 500;
+            padding: 5px 10px;
+            font-size: 0.8rem;
             cursor: pointer;
-            transition: 0.2s;
-            font-size: 0.85rem;
+            color: #4a5a45;
+            flex-shrink: 0;
+            display: none;
         }
-        .edit-mode-btn:hover,
-        .delete-mode-btn:hover {
-            background: #5c7858;
-        }
-        .edit-mode-btn.active,
-        .delete-mode-btn.active {
-            background: #c47b5e;
+        .edit-mode-bar {
+            display: none;
         }
         .sites-grid {
             display: grid;
@@ -559,7 +610,6 @@
             overflow: hidden;
             text-overflow: ellipsis;
             flex: 1;
-            letter-spacing: -0.2px;
         }
         .site-name-link:hover {
             color: #6e8c6a;
@@ -655,9 +705,6 @@
             padding: 4px;
             height: 44px;
             cursor: pointer;
-        }
-        .input-group input:focus {
-            border-color: #8caa87;
         }
         .input-group .color-row {
             display: flex;
@@ -793,9 +840,6 @@
         .key-status .dot.custom {
             background: #c47b5e;
         }
-        .key-status .dot.error {
-            background: #e03a3a;
-        }
         .paste-hint {
             font-size: 0.7rem;
             color: #b2aa98;
@@ -804,6 +848,12 @@
         .paste-hint i {
             color: #6e8c6a;
         }
+        .dropdown-sort-item {
+            display: none;
+        }
+        .sort-btn-outside {
+            display: flex;
+        }
         @media (max-width: 680px) {
             body {
                 padding: 16px;
@@ -811,26 +861,14 @@
             .top-header {
                 flex-direction: column;
                 align-items: stretch;
-                gap: 12px;
             }
-            .header-left {
-                justify-content: space-between;
-                width: 100%;
-            }
-            .date-calc {
+            .header-right {
                 justify-content: center;
             }
-            .date-calc .calc-item input {
-                width: 100px;
-            }
-            .date-calc .calc-item input[type="number"] {
-                width: 70px;
-            }
-            .calc-buttons {
-                margin-top: 4px;
-            }
-            .email-select-wrapper {
-                align-self: center;
+            .date-calc-popup {
+                right: 10px;
+                left: 10px;
+                justify-content: center;
             }
             .toolbar {
                 flex-direction: column;
@@ -857,25 +895,36 @@
                 padding: 6px 16px;
                 border-radius: 60px;
             }
-            .action-buttons {
-                margin-left: 0;
+            .toolbar-right {
                 justify-content: center;
+                width: 100%;
             }
-            .sort-buttons {
-                justify-content: center;
+            .sort-btn-outside {
+                display: none !important;
+            }
+            .dropdown-sort-item {
+                display: block !important;
+            }
+            .operations-dropdown-content .divider.dropdown-sort-item {
+                display: block !important;
             }
             .sites-grid {
                 grid-template-columns: 1fr;
             }
-            .calendar-modal .modal-content .calendar-grid {
-                grid-template-columns: 1fr;
+            .backup-section {
+                flex-wrap: wrap;
+            }
+            .backup-inner {
+                flex-wrap: wrap;
+            }
+            .backup-expand-btn {
+                display: none;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- 头部 -->
         <div class="top-header">
             <div class="header-left">
                 <div class="logo-area">
@@ -884,12 +933,26 @@
                     </div>
                     <button class="custom-btn" id="openCustomModalBtn" title="自定义设置"><i class="fas fa-cog"></i></button>
                 </div>
-                <div class="date-area" id="dateArea" title="点击查看今日黄历">
-                    <div class="date-main" id="dateMain">加载中...</div>
-                    <div class="date-lunar date-loading" id="dateLunar">获取农历...</div>
+                <div class="header-right">
+                    <button class="huangli-btn" id="huangliBtn" title="查看今日黄历"><i class="fas fa-calendar-alt"></i> 黄历</button>
+                    <button class="calc-date-btn" id="calcDateToggleBtn"><i class="fas fa-calculator"></i> 计算日期</button>
+                    <div class="email-select-wrapper">
+                        <select id="emailSelect">
+                            <option value="">📧 邮箱</option>
+                            <option value="https://mail.163.com/">163邮箱</option>
+                            <option value="https://mail.sina.com.cn/">新浪邮箱</option>
+                            <option value="https://mail.google.com/">Gmail</option>
+                            <option value="https://exmail.qq.com/login">腾讯企邮</option>
+                            <option value="https://mail.qq.com/">QQ邮箱</option>
+                            <option value="https://outlook.live.com/">Hotmail</option>
+                            <option value="https://www.188.com/">188邮箱</option>
+                            <option value="https://qzone.qq.com/">QQ空间</option>
+                            <option value="https://www.alipay.com/">支付宝</option>
+                        </select>
+                    </div>
                 </div>
             </div>
-            <div class="date-calc">
+            <div class="date-calc-popup" id="dateCalcPopup">
                 <div class="calc-item">
                     <label>📅 开始</label>
                     <input type="date" id="startDate">
@@ -903,31 +966,15 @@
                 <div class="calc-item">
                     <label>📆 相差</label>
                     <input type="number" id="diffDays" placeholder="天数" min="0">
-                    <span style="font-size:0.7rem; color:#6f6a5c; margin-left:2px;">天</span>
+                    <span style="font-size:0.7rem; color:#6f6a5c;">天</span>
                 </div>
                 <div class="calc-buttons">
-                    <button class="btn-calc" id="calcDateBtn"><i class="fas fa-calculator"></i> 计算</button>
-                    <button class="btn-clear" id="clearDateBtn"><i class="fas fa-undo-alt"></i> 清空</button>
+                    <button class="btn-calc" id="calcDateBtn">计算</button>
+                    <button class="btn-clear" id="clearDateBtn">清空</button>
                 </div>
-            </div>
-            <div class="email-select-wrapper">
-                <select id="emailSelect">
-                    <option value="">📧 邮箱</option>
-                    <option value="https://mail.qq.com/">QQ邮箱</option>
-                    <option value="https://mail.163.com/">163邮箱</option>
-                    <option value="https://www.126.com/">126邮箱</option>
-                    <option value="https://exmail.qq.com/login">腾讯企邮</option>
-                    <option value="https://mail.sina.com.cn/">新浪邮箱</option>
-                    <option value="https://outlook.live.com/">Hotmail</option>
-                    <option value="https://www.188.com/">188邮箱</option>
-                    <option value="https://mail.google.com/">Gmail</option>
-                    <option value="https://qzone.qq.com/">QQ空间</option>
-
-                </select>
             </div>
         </div>
 
-        <!-- 醒目搜索栏 -->
         <div class="toolbar">
             <div class="search-bar">
                 <select id="engineSelect">
@@ -938,162 +985,168 @@
                 <input type="text" id="globalSearchInput" placeholder="搜索网站名称或招标资讯...">
                 <button id="engineSearchBtn"><i class="fas fa-search"></i> 搜</button>
             </div>
-            <div class="action-buttons">
-                <label class="btn-outline" for="importFileInput"><i class="fas fa-upload"></i> 导入收藏夹</label>
-                <input type="file" id="importFileInput" accept=".htm,.html" style="display: none;">
-                <button id="openAddSiteModalBtn" class="btn-outline"><i class="fas fa-plus-circle"></i> 添加网站</button>
-                <button id="clearAllSitesBtn" class="btn-outline"><i class="fas fa-trash-alt"></i> 清空网站</button>
-            </div>
-            <div class="sort-buttons">
-                <button id="sortByNameBtn" class="sort-btn"><i class="fas fa-sort-alpha-down"></i> 字母排序</button>
-                <button id="sortByFreqBtn" class="sort-btn"><i class="fas fa-chart-line"></i> 频率排序</button>
+            <div class="toolbar-right">
+                <div class="sort-buttons">
+                    <button id="sortByNameBtn" class="sort-btn sort-btn-outside"><i class="fas fa-sort-alpha-down"></i> 字母排序</button>
+                    <button id="sortByFreqBtn" class="sort-btn sort-btn-outside"><i class="fas fa-chart-line"></i> 频率排序</button>
+                </div>
+                <div class="operations-dropdown">
+                    <button class="operations-btn" id="operationsBtn"><i class="fas fa-ellipsis-v"></i> 操作</button>
+                    <div class="operations-dropdown-content" id="operationsDropdown">
+                        <button id="editModeBtnMenu"><i class="fas fa-edit"></i> 编辑</button>
+                        <button id="deleteModeBtnMenu"><i class="fas fa-trash-alt"></i> 删除</button>
+                        <div class="divider"></div>
+                        <label for="importFileInput" style="display:block; padding:8px 24px; cursor:pointer; font-size:0.8rem; color:#4a5a45;">
+                            <i class="fas fa-upload"></i> 导入收藏夹
+                        </label>
+                        <input type="file" id="importFileInput" accept=".htm,.html" style="display:none;">
+                        <button id="openAddSiteModalBtnMenu"><i class="fas fa-plus-circle"></i> 添加网站</button>
+                        <button id="clearAllSitesBtnMenu"><i class="fas fa-trash-alt"></i> 清空网站</button>
+                        <div class="divider dropdown-sort-item"></div>
+                        <button id="sortByNameBtnMenu" class="dropdown-sort-item"><i class="fas fa-sort-alpha-down"></i> 字母排序</button>
+                        <button id="sortByFreqBtnMenu" class="dropdown-sort-item"><i class="fas fa-chart-line"></i> 频率排序</button>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- 标签栏 -->
         <div class="tag-manager">
-            <div class="tag-list" id="tagListContainer"></div>
+            <div class="tag-list-wrapper">
+                <div class="tag-list" id="tagListContainer"></div>
+                <button class="tag-expand-btn" id="tagExpandBtn" title="展开所有标签"><i class="fas fa-chevron-down"></i></button>
+            </div>
             <div class="tag-actions">
                 <button id="manageTagsBtn" class="btn-tag"><i class="fas fa-cog"></i> 管理标签</button>
             </div>
         </div>
 
-        <!-- 网站卡片列表 -->
         <div id="sitesGridContainer" class="sites-grid"></div>
 
-        <!-- 备份区域 -->
         <div class="backup-section">
-            <div class="cloud-backup">
-                <i class="fas fa-cloud-upload-alt" style="color:#6e8c6a;"></i>
-                <input type="text" id="cloudKey" placeholder="主KEY (6-60位)" maxlength="60">
-                <button id="backupToCloudBtn"><i class="fas fa-upload"></i> 分片备份</button>
-                <button id="restoreFromCloudBtn"><i class="fas fa-download"></i> 分片恢复</button>
-                <button id="genRandomKeyBtn" class="random-key-btn">随机KEY</button>
-            </div>
-            <div class="local-backup">
-                <i class="fas fa-hdd" style="color:#6e8c6a;"></i>
-                <button id="backupToLocalBtn"><i class="fas fa-file-download"></i> 备份本地</button>
-                <button id="restoreFromLocalBtn"><i class="fas fa-file-upload"></i> 恢复本地</button>
-                <input type="file" id="localRestoreFile" accept=".json" style="display: none;">
-            </div>
-            <div class="edit-mode-bar">
-                <button id="editModeBtn" class="edit-mode-btn">编辑</button>
-                <button id="deleteModeBtn" class="delete-mode-btn">删除</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 添加网站弹窗 -->
-    <div id="addSiteModal" class="modal">
-        <div class="modal-content">
-            <h3 style="margin-bottom: 16px;"><i class="fas fa-plus-circle"></i> 添加投标网站</h3>
-            <div class="input-group">
-                <label>网址 URL *</label>
-                <input type="text" id="modalAddUrl" placeholder="https://... 或 粘贴'标题+网址'">
-                <div class="paste-hint"><i class="fas fa-lightbulb"></i> 支持粘贴浏览器地址栏右键复制的「标题+网址」</div>
-            </div>
-            <div class="input-group">
-                <label>网站名称</label>
-                <input type="text" id="modalAddName" placeholder="自动获取或手动填写">
-            </div>
-            <div class="input-group">
-                <label>所属标签</label>
-                <select id="modalTagSelect"></select>
-            </div>
-            <div class="modal-buttons">
-                <button id="closeModalBtn" class="btn-secondary">取消</button>
-                <button id="modalAddSiteBtn" class="btn-primary">添加</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 编辑网站弹窗 -->
-    <div id="editModal" class="modal">
-        <div class="modal-content">
-            <h3 style="margin-bottom: 16px;"><i class="fas fa-pen-alt"></i> 编辑站点</h3>
-            <div class="input-group"><label>网站名称</label><input type="text" id="editName"></div>
-            <div class="input-group"><label>网址 URL</label><input type="text" id="editUrl"></div>
-            <div class="input-group"><label>所属标签</label><select id="editTagSelect"></select></div>
-            <div class="modal-buttons"><button id="closeEditModalBtn" class="btn-secondary">取消</button><button id="saveEditBtn" class="btn-primary">保存</button></div>
-        </div>
-    </div>
-
-    <!-- 管理标签弹窗 -->
-    <div id="manageTagsModal" class="modal">
-        <div class="modal-content">
-            <h3><i class="fas fa-tags"></i> 管理标签</h3>
-            <div id="tagsManageList" style="max-height: 320px; overflow-y: auto; margin: 20px 0;"></div>
-            <div class="modal-buttons"><button id="closeManageTagsBtn" class="btn-secondary">关闭</button></div>
-        </div>
-    </div>
-
-    <!-- 自定义设置弹窗 -->
-    <div id="customModal" class="modal">
-        <div class="modal-content">
-            <h3><i class="fas fa-palette"></i> 自定义设置</h3>
-            <div class="input-group">
-                <label>标题（"投标"部分）</label>
-                <input type="text" id="customTitle" placeholder="输入标题，如'投标'">
-            </div>
-            <div class="input-group">
-                <label>背景颜色</label>
-                <div class="color-row">
-                    <input type="color" id="customBgColor" value="#ecece4">
-                    <input type="text" id="customBgColorText" placeholder="#ecece4">
+            <div class="backup-inner" id="backupInner">
+                <div class="cloud-backup">
+                    <i class="fas fa-cloud-upload-alt" style="color:#6e8c6a;"></i>
+                    <input type="text" id="cloudKey" placeholder="主KEY (6-60位)" maxlength="60">
+                    <button id="backupToCloudBtn"><i class="fas fa-upload"></i> 分片备份</button>
+                    <button id="restoreFromCloudBtn"><i class="fas fa-download"></i> 分片恢复</button>
+                    <button id="genRandomKeyBtn" class="random-key-btn">随机KEY</button>
+                </div>
+                <div class="local-backup">
+                    <i class="fas fa-hdd" style="color:#6e8c6a;"></i>
+                    <button id="backupToLocalBtn"><i class="fas fa-file-download"></i> 备份本地</button>
+                    <button id="restoreFromLocalBtn"><i class="fas fa-file-upload"></i> 恢复本地</button>
+                    <input type="file" id="localRestoreFile" accept=".json" style="display: none;">
                 </div>
             </div>
-            <div class="input-group">
-                <label>字体颜色</label>
-                <div class="color-row">
-                    <input type="color" id="customTextColor" value="#2c3e2f">
-                    <input type="text" id="customTextColorText" placeholder="#2c3e2f">
+            <button class="backup-expand-btn" id="backupExpandBtn" title="展开更多备份操作"><i class="fas fa-chevron-down"></i></button>
+        </div>
+
+        <div id="addSiteModal" class="modal">
+            <div class="modal-content">
+                <h3 style="margin-bottom: 16px;"><i class="fas fa-plus-circle"></i> 添加投标网站</h3>
+                <div class="input-group">
+                    <label>网址 URL *</label>
+                    <input type="text" id="modalAddUrl" placeholder="https://... 或 粘贴'标题+网址'">
+                    <div class="paste-hint"><i class="fas fa-lightbulb"></i> 支持粘贴浏览器地址栏右键复制的「标题+网址」</div>
                 </div>
-            </div>
-            <div class="input-group">
-                <label>字体大小 (px)</label>
-                <input type="number" id="customFontSize" value="15" min="10" max="30" step="1">
-            </div>
-            <div class="input-group">
-                <label>🔑 黄历API密钥</label>
-                <input type="text" id="customApiKey" placeholder="输入自定义密钥（留空则使用默认密钥）" style="font-family:monospace;">
-                <div class="key-status" id="keyStatus">
-                    <span class="dot default"></span>
-                    <span id="keyStatusText">当前使用：默认密钥</span>
+                <div class="input-group">
+                    <label>网站名称</label>
+                    <input type="text" id="modalAddName" placeholder="自动获取或手动填写">
                 </div>
-                <div style="display:flex; gap:8px; margin-top:4px; flex-wrap:wrap;">
-                    <button class="btn-secondary" id="resetApiKeyBtn" style="padding:4px 16px; font-size:0.75rem;"><i class="fas fa-undo"></i> 重置密钥</button>
-                    <span style="font-size:0.7rem; color:#b2aa98; align-self:center;">重置后使用内置默认密钥</span>
+                <div class="input-group">
+                    <label>所属标签</label>
+                    <select id="modalTagSelect"></select>
                 </div>
-                <div style="font-size:0.7rem; color:#b2aa98; margin-top:4px;">
-                    如需使用自己的密钥，请在 <a href="https://api.t1qq.com/user/key" target="_blank" style="color:#6e8c6a;">api.t1qq.com</a> 申请
+                <div class="modal-buttons">
+                    <button id="closeModalBtn" class="btn-secondary">取消</button>
+                    <button id="modalAddSiteBtn" class="btn-primary">添加</button>
                 </div>
-            </div>
-            <div class="modal-buttons">
-                <button class="btn-secondary" id="resetCustomBtn">恢复默认样式</button>
-                <button class="btn-secondary" id="closeCustomBtn">取消</button>
-                <button class="btn-primary" id="saveCustomBtn">保存</button>
             </div>
         </div>
-    </div>
 
-    <!-- 黄历弹窗 -->
-    <div id="calendarModal" class="modal calendar-modal">
-        <div class="modal-content">
-            <h3><i class="fas fa-calendar-day"></i> 今日黄历</h3>
-            <div id="calendarContent">
-                <div style="text-align:center; color:#b2aa98; padding:20px;">加载中...</div>
-            </div>
-            <div class="modal-buttons">
-                <button class="btn-secondary" id="closeCalendarBtn">关闭</button>
+        <div id="editModal" class="modal">
+            <div class="modal-content">
+                <h3 style="margin-bottom: 16px;"><i class="fas fa-pen-alt"></i> 编辑站点</h3>
+                <div class="input-group"><label>网站名称</label><input type="text" id="editName"></div>
+                <div class="input-group"><label>网址 URL</label><input type="text" id="editUrl"></div>
+                <div class="input-group"><label>所属标签</label><select id="editTagSelect"></select></div>
+                <div class="modal-buttons"><button id="closeEditModalBtn" class="btn-secondary">取消</button><button id="saveEditBtn" class="btn-primary">保存</button></div>
             </div>
         </div>
-    </div>
 
-    <div id="toastMsg" class="toast-msg"></div>
+        <div id="manageTagsModal" class="modal">
+            <div class="modal-content">
+                <h3><i class="fas fa-tags"></i> 管理标签</h3>
+                <div id="tagsManageList" style="max-height: 320px; overflow-y: auto; margin: 20px 0;"></div>
+                <div class="modal-buttons"><button id="closeManageTagsBtn" class="btn-secondary">关闭</button></div>
+            </div>
+        </div>
+
+        <div id="customModal" class="modal">
+            <div class="modal-content">
+                <h3><i class="fas fa-palette"></i> 自定义设置</h3>
+                <div class="input-group">
+                    <label>标题（"投标"部分）</label>
+                    <input type="text" id="customTitle" placeholder="输入标题，如'投标'">
+                </div>
+                <div class="input-group">
+                    <label>背景颜色</label>
+                    <div class="color-row">
+                        <input type="color" id="customBgColor" value="#ecece4">
+                        <input type="text" id="customBgColorText" placeholder="#ecece4">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>字体颜色</label>
+                    <div class="color-row">
+                        <input type="color" id="customTextColor" value="#2c3e2f">
+                        <input type="text" id="customTextColorText" placeholder="#2c3e2f">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>字体大小 (px)</label>
+                    <input type="number" id="customFontSize" value="15" min="10" max="30" step="1">
+                </div>
+                <div class="input-group">
+                    <label>🔑 黄历API密钥</label>
+                    <input type="text" id="customApiKey" placeholder="输入自定义密钥（留空则使用默认密钥）" style="font-family:monospace;">
+                    <div class="key-status" id="keyStatus">
+                        <span class="dot default"></span>
+                        <span id="keyStatusText">当前使用：默认密钥</span>
+                    </div>
+                    <div style="display:flex; gap:8px; margin-top:4px; flex-wrap:wrap;">
+                        <button class="btn-secondary" id="resetApiKeyBtn" style="padding:4px 16px; font-size:0.75rem;"><i class="fas fa-undo"></i> 重置密钥</button>
+                        <span style="font-size:0.7rem; color:#b2aa98; align-self:center;">重置后使用内置默认密钥</span>
+                    </div>
+                    <div style="font-size:0.7rem; color:#b2aa98; margin-top:4px;">
+                        如需使用自己的密钥，请在 <a href="https://api.t1qq.com/user/key" target="_blank" style="color:#6e8c6a;">api.t1qq.com</a> 申请
+                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <button class="btn-secondary" id="resetCustomBtn">恢复默认样式</button>
+                    <button class="btn-secondary" id="closeCustomBtn">取消</button>
+                    <button class="btn-primary" id="saveCustomBtn">保存</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="calendarModal" class="modal calendar-modal">
+            <div class="modal-content">
+                <h3><i class="fas fa-calendar-day"></i> 今日黄历</h3>
+                <div id="calendarContent">
+                    <div style="text-align:center; color:#b2aa98; padding:20px;">加载中...</div>
+                </div>
+                <div class="modal-buttons">
+                    <button class="btn-secondary" id="closeCalendarBtn">关闭</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="toastMsg" class="toast-msg"></div>
+    </div>
 
     <script>
         (function() {
-            // ---------- 数据 ----------
             let sites = [];
             let tags = [];
             let editId = null;
@@ -1124,7 +1177,6 @@
             let calendarData = null;
             let searchDebounceTimer = null;
 
-            // ----- 获取当前字体大小（纯读取，无副作用） -----
             function getCustomFontSize() {
                 try {
                     const stored = localStorage.getItem(CUSTOM_STYLE_KEY);
@@ -1139,40 +1191,23 @@
                 return defaultCustom.fontSize;
             }
 
-            // ----- 智能粘贴解析函数 -----
             function parseTitleUrl(text) {
                 const urlMatch = text.match(/(https?:\/\/[^\s]+)/);
-                if (!urlMatch) {
-                    return { title: text.trim(), url: '' };
-                }
+                if (!urlMatch) return { title: text.trim(), url: '' };
                 const url = urlMatch[0];
                 let titlePart = text.substring(0, urlMatch.index).trim();
-                if (!titlePart) {
-                    titlePart = text.substring(urlMatch.index + url.length).trim();
-                }
+                if (!titlePart) titlePart = text.substring(urlMatch.index + url.length).trim();
                 titlePart = titlePart.replace(/[\|\-—–]\s*$/, '').trim();
                 if (!titlePart) {
-                    try {
-                        const domain = new URL(url).hostname.replace(/^www\./, '');
-                        titlePart = domain;
-                    } catch (e) {
-                        titlePart = url;
-                    }
+                    try { titlePart = new URL(url).hostname.replace(/^www\./, ''); } catch (e) { titlePart = url; }
                 }
                 return { title: titlePart, url: url };
             }
 
-            // ----- 获取当前使用的密钥 -----
             function getApiKey() {
                 const userKey = localStorage.getItem(API_KEY_KEY);
-                if (userKey && userKey.trim()) {
-                    const trimmed = userKey.trim();
-                    if (trimmed.length > 10 && /^[A-Za-z0-9]+$/.test(trimmed)) {
-                        return trimmed;
-                    } else {
-                        localStorage.removeItem(API_KEY_KEY);
-                        console.warn('无效的用户密钥已清除');
-                    }
+                if (userKey && userKey.trim() && /^[A-Za-z0-9]+$/.test(userKey.trim()) && userKey.trim().length > 10) {
+                    return userKey.trim();
                 }
                 return DEFAULT_API_KEY;
             }
@@ -1188,7 +1223,6 @@
                 return key.substring(0, 4) + '****' + key.substring(key.length - 4);
             }
 
-            // ---------- 自定义样式管理 ----------
             function loadCustomStyle() {
                 const stored = localStorage.getItem(CUSTOM_STYLE_KEY);
                 if (stored) {
@@ -1209,15 +1243,10 @@
             function applyCustomStyle(custom) {
                 document.body.style.backgroundColor = custom.bgColor || defaultCustom.bgColor;
                 document.body.style.color = custom.textColor || defaultCustom.textColor;
-                const siteLinks = document.querySelectorAll('.site-name-link');
                 const fontSize = (custom.fontSize || defaultCustom.fontSize) + 'px';
-                siteLinks.forEach(el => {
-                    el.style.fontSize = fontSize;
-                });
+                document.querySelectorAll('.site-name-link').forEach(el => el.style.fontSize = fontSize);
                 const titleEl = document.getElementById('editableTitle');
-                if (titleEl && custom.title) {
-                    titleEl.textContent = custom.title;
-                }
+                if (titleEl && custom.title) titleEl.textContent = custom.title;
                 localStorage.setItem(TITLE_KEY, custom.title || '投标');
             }
 
@@ -1259,8 +1288,7 @@
                 const statusText = document.getElementById('keyStatusText');
                 const dot = document.querySelector('#keyStatus .dot');
                 const currentKey = getApiKey();
-                const isCustom = isUsingCustomKey();
-                if (isCustom) {
+                if (isUsingCustomKey()) {
                     statusText.textContent = `当前使用：自定义密钥 (${getMaskedKey(currentKey)})`;
                     dot.className = 'dot custom';
                 } else {
@@ -1272,11 +1300,9 @@
             function resetApiKey() {
                 localStorage.removeItem(API_KEY_KEY);
                 updateKeyStatusUI();
-                fetchLunarData();
                 showToast('已重置为默认密钥', 1500);
             }
 
-            // ---------- 标题自定义 ----------
             function loadTitle() {
                 const saved = localStorage.getItem(TITLE_KEY);
                 if (saved) document.getElementById('editableTitle').textContent = saved;
@@ -1287,7 +1313,6 @@
                 document.getElementById('editableTitle').textContent = newTitle;
             }
 
-            // ---------- 日期计算 ----------
             function clearDateFields() {
                 document.getElementById('startDate').value = '';
                 document.getElementById('endDate').value = '';
@@ -1298,106 +1323,60 @@
                 const start = document.getElementById('startDate');
                 const end = document.getElementById('endDate');
                 const diff = document.getElementById('diffDays');
-                const startVal = start.value;
-                const endVal = end.value;
-                const diffVal = diff.value;
-                let filled = 0;
-                if (startVal) filled++;
-                if (endVal) filled++;
-                if (diffVal) filled++;
+                const startVal = start.value,
+                    endVal = end.value,
+                    diffVal = diff.value;
+                let filled = (startVal ? 1 : 0) + (endVal ? 1 : 0) + (diffVal ? 1 : 0);
                 if (filled < 2) { showToast('请至少输入两项才能计算', 1500); return; }
-                if (filled === 3) {
-                    if (startVal && endVal) {
-                        const d1 = new Date(startVal);
-                        const d2 = new Date(endVal);
-                        if (!isNaN(d1) && !isNaN(d2)) {
-                            const days = Math.round(Math.abs(d2 - d1) / (1000 * 60 * 60 * 24));
-                            diff.value = days;
-                            showToast(`计算完成：相差 ${days} 天`, 1200);
-                            return;
-                        } else { showToast('日期格式无效', 1500); return; }
+                if (filled === 3 && startVal && endVal) {
+                    const d1 = new Date(startVal),
+                        d2 = new Date(endVal);
+                    if (!isNaN(d1) && !isNaN(d2)) {
+                        diff.value = Math.round(Math.abs(d2 - d1) / (1000 * 60 * 60 * 24));
+                        showToast('计算完成', 1200);
+                        return;
                     }
                 }
                 if (startVal && endVal) {
-                    const d1 = new Date(startVal);
-                    const d2 = new Date(endVal);
+                    const d1 = new Date(startVal),
+                        d2 = new Date(endVal);
                     if (!isNaN(d1) && !isNaN(d2)) {
-                        const days = Math.round(Math.abs(d2 - d1) / (1000 * 60 * 60 * 24));
-                        diff.value = days;
-                        showToast(`计算完成：相差 ${days} 天`, 1200);
-                    } else { showToast('日期格式无效', 1500); }
+                        diff.value = Math.round(Math.abs(d2 - d1) / (1000 * 60 * 60 * 24));
+                        showToast('计算完成', 1200);
+                    } else showToast('日期格式无效', 1500);
                 } else if (startVal && diffVal) {
-                    const d1 = new Date(startVal);
-                    const days = parseInt(diffVal);
+                    const d1 = new Date(startVal),
+                        days = parseInt(diffVal);
                     if (!isNaN(d1) && !isNaN(days) && days >= 0) {
                         const d2 = new Date(d1);
                         d2.setDate(d2.getDate() + days);
                         end.value = d2.toISOString().split('T')[0];
-                        showToast(`计算完成：结束日期为 ${end.value}`, 1200);
-                    } else { showToast('请输入有效的天数（≥0）', 1500); }
+                        showToast(`结束日期 ${end.value}`, 1200);
+                    } else showToast('天数无效', 1500);
                 } else if (endVal && diffVal) {
-                    const d2 = new Date(endVal);
-                    const days = parseInt(diffVal);
+                    const d2 = new Date(endVal),
+                        days = parseInt(diffVal);
                     if (!isNaN(d2) && !isNaN(days) && days >= 0) {
                         const d1 = new Date(d2);
                         d1.setDate(d1.getDate() - days);
                         start.value = d1.toISOString().split('T')[0];
-                        showToast(`计算完成：开始日期为 ${start.value}`, 1200);
-                    } else { showToast('请输入有效的天数（≥0）', 1500); }
-                } else { showToast('请至少输入两项（开始/结束/天数）', 1500); }
+                        showToast(`开始日期 ${start.value}`, 1200);
+                    } else showToast('天数无效', 1500);
+                } else showToast('请至少输入两项', 1500);
             }
 
-            // ---------- 农历 + 黄历 API ----------
             async function fetchLunarData() {
                 const key = getApiKey();
-                const dateMain = document.getElementById('dateMain');
-                const dateLunar = document.getElementById('dateLunar');
-                const now = new Date();
-                const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
-                const dateStr =
-                    `${now.getFullYear()}/${now.getMonth()+1}/${now.getDate()} 周${weekdays[now.getDay()]}`;
-                dateMain.textContent = dateStr;
-                if (!key) {
-                    dateLunar.textContent = '⚠️ 密钥无效';
-                    dateLunar.className = 'date-lunar date-error';
-                    showToast('API密钥无效，请在自定义设置中配置', 3000);
-                    return;
-                }
-                dateLunar.className = 'date-lunar date-loading';
-                dateLunar.textContent = '获取农历...';
                 try {
-                    const url =
-                        `https://api.t1qq.com/api/tool/day/time?key=${encodeURIComponent(key)}`;
-                    const resp = await fetch(url);
+                    const resp = await fetch(
+                        `https://api.t1qq.com/api/tool/day/time?key=${encodeURIComponent(key)}`);
                     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
                     const data = await resp.json();
                     if (data.code === 200 && data.data) {
-                        const lunarStr = data.data.lunar || '';
-                        if (lunarStr) {
-                            dateLunar.textContent = lunarStr;
-                            dateLunar.className = 'date-lunar';
-                            calendarData = data.data;
-                        } else {
-                            dateLunar.textContent = '农历获取失败';
-                            dateLunar.className = 'date-lunar date-error';
-                        }
-                    } else {
-                        const errMsg = data.msg || 'API返回错误';
-                        dateLunar.textContent = '农历加载失败';
-                        dateLunar.className = 'date-lunar date-error';
-                        console.warn('API错误:', errMsg);
-                        if (data.code === 401 || data.code === 403 || errMsg.includes('key') || errMsg.includes(
-                                '密钥')) {
-                            showToast('API密钥无效，请在自定义设置中配置正确的密钥', 4000);
-                        } else {
-                            showToast(`获取农历失败：${errMsg}`, 3000);
-                        }
+                        calendarData = data.data;
                     }
                 } catch (err) {
-                    console.warn('获取农历失败:', err);
-                    dateLunar.textContent = '网络错误，请重试';
-                    dateLunar.className = 'date-lunar date-error';
-                    showToast('无法连接到黄历API，请检查网络', 3000);
+                    console.warn('黄历数据预加载失败:', err.message);
                 }
             }
 
@@ -1405,90 +1384,40 @@
                 const modal = document.getElementById('calendarModal');
                 const content = document.getElementById('calendarContent');
                 modal.style.display = 'flex';
-                content.innerHTML =
-                    '<div style="text-align:center; color:#b2aa98; padding:20px;">加载黄历中...</div>';
-                const key = getApiKey();
-                if (!key) {
-                    content.innerHTML = `
-                <div style="text-align:center; color:#c47b5e; padding:20px;">
-                  <i class="fas fa-exclamation-circle"></i> API密钥无效，请先在自定义设置中配置
-                </div>`;
-                    return;
-                }
+                content.innerHTML = '<div style="text-align:center; padding:20px;">加载中...</div>';
+                if (!getApiKey()) { content.innerHTML =
+                        '<div style="text-align:center;color:#c47b5e;padding:20px;">密钥无效</div>'; return; }
                 if (calendarData) { renderCalendarContent(calendarData); return; }
-                fetch(`https://api.t1qq.com/api/tool/day/time?key=${encodeURIComponent(key)}`)
-                    .then(resp => resp.json())
+                fetch(`https://api.t1qq.com/api/tool/day/time?key=${encodeURIComponent(getApiKey())}`)
+                    .then(r => r.json())
                     .then(data => {
-                        if (data.code === 200 && data.data) {
-                            calendarData = data.data;
-                            renderCalendarContent(data.data);
-                        } else {
-                            const errMsg = data.msg || '未知错误';
-                            content.innerHTML = `
-                        <div style="text-align:center; color:#c47b5e; padding:20px;">
-                          <i class="fas fa-exclamation-circle"></i> 获取黄历失败：${errMsg}
-                        </div>`;
-                        }
+                        if (data.code === 200 && data.data) { calendarData = data.data;
+                            renderCalendarContent(data.data); } else content.innerHTML =
+                            '<div style="text-align:center;color:#c47b5e;padding:20px;">获取失败</div>';
                     })
-                    .catch(err => {
-                        content.innerHTML = `
-                  <div style="text-align:center; color:#c47b5e; padding:20px;">
-                    <i class="fas fa-exclamation-circle"></i> 网络错误，请稍后重试
-                  </div>`;
-                        console.warn('获取黄历失败:', err);
-                    });
+                    .catch(() => content.innerHTML =
+                        '<div style="text-align:center;color:#c47b5e;padding:20px;">网络错误</div>');
             }
 
             function renderCalendarContent(data) {
                 const content = document.getElementById('calendarContent');
-                const lunarDate = data.lunar || '--';
-                const solarDate = data.solar || '--';
-                const zodiac = data.zodiac || '--';
-                const week = data.Week || '--';
-                const yi = data.luckyDay?.yi || [];
-                const ji = data.luckyDay?.ji || [];
-                const chong = data.dayxiangchong?.chongDesc || '--';
-                const jiShen = data.jsxs?.jiShen || [];
-                const xiongSha = data.jsxs?.xiongSha || [];
-                const xingXiu = data.xingXiu?.xiu || '--';
-                const xingXiuLucky = data.xingXiu?.lucky || '--';
-                const tianShen = data.tianShen?.day || '--';
-                const tianShenLucky = data.tianShen?.lucky || '--';
+                const yi = data.luckyDay?.yi || [],
+                    ji = data.luckyDay?.ji || [];
                 content.innerHTML = `
-            <div class="calendar-header">
-              <span><strong>📅 公历</strong> ${solarDate}</span>
-              <span><strong>🌙 农历</strong> ${lunarDate}</span>
-              <span><strong>🐾 生肖</strong> ${zodiac}</span>
-              <span><strong>📆 星期</strong> ${week}</span>
-            </div>
-            <div class="calendar-grid">
-              <div class="col">
-                <h4>✅ 宜</h4>
-                <div class="tag-list-wrap">
-                  ${yi.length > 0 ? yi.map(s => `<span class="tag-item-sm suit">${s}</span>`).join('') : '<span style="color:#b2aa98;">无</span>'}
-                </div>
-              </div>
-              <div class="col">
-                <h4>❌ 忌</h4>
-                <div class="tag-list-wrap">
-                  ${ji.length > 0 ? ji.map(s => `<span class="tag-item-sm avoid">${s}</span>`).join('') : '<span style="color:#b2aa98;">无</span>'}
-                </div>
-              </div>
-            </div>
-            <div class="calendar-info">
-              <span><strong>冲煞：</strong> ${chong}</span>
-              ${jiShen.length > 0 ? `<span><strong>吉神：</strong> ${jiShen.join('、')}</span>` : ''}
-              ${xiongSha.length > 0 ? `<span><strong>凶煞：</strong> ${xiongSha.join('、')}</span>` : ''}
-              ${xingXiu !== '--' ? `<span><strong>星宿：</strong> ${xingXiu} (${xingXiuLucky})</span>` : ''}
-              ${tianShen !== '--' ? `<span><strong>天仙：</strong> ${tianShen} (${tianShenLucky})</span>` : ''}
-            </div>`;
+                    <div class="calendar-header">
+                        <span><strong>📅 公历</strong> ${data.solar||'--'}</span>
+                        <span><strong>🌙 农历</strong> ${data.lunar||'--'}</span>
+                        <span><strong>🐾 生肖</strong> ${data.zodiac||'--'}</span>
+                    </div>
+                    <div class="calendar-grid">
+                        <div class="col"><h4>✅ 宜</h4><div class="tag-list-wrap">${yi.length ? yi.map(s=>`<span class="tag-item-sm suit">${s}</span>`).join('') : '无'}</div></div>
+                        <div class="col"><h4>❌ 忌</h4><div class="tag-list-wrap">${ji.length ? ji.map(s=>`<span class="tag-item-sm avoid">${s}</span>`).join('') : '无'}</div></div>
+                    </div>
+                    <div class="calendar-info"><span><strong>冲煞：</strong> ${data.dayxiangchong?.chongDesc||'--'}</span></div>`;
             }
 
-            function closeCalendar() {
-                document.getElementById('calendarModal').style.display = 'none';
-            }
+            function closeCalendar() { document.getElementById('calendarModal').style.display = 'none'; }
 
-            // ---------- 辅助函数 ----------
             function showToast(msg, duration = 2200) {
                 const toast = document.getElementById('toastMsg');
                 toast.textContent = msg;
@@ -1502,8 +1431,8 @@
             }
 
             function loadClickCounts() {
-                const stored = localStorage.getItem(CLICK_COUNT_KEY);
-                try { clickCounts = stored ? JSON.parse(stored) : {}; } catch (e) { clickCounts = {}; }
+                try { clickCounts = JSON.parse(localStorage.getItem(CLICK_COUNT_KEY) || '{}'); } catch (e) { clickCounts =
+                        {}; }
             }
 
             function saveClickCounts() { localStorage.setItem(CLICK_COUNT_KEY, JSON.stringify(clickCounts)); }
@@ -1516,181 +1445,150 @@
 
             function initTags() {
                 const stored = localStorage.getItem(TAGS_KEY);
-                if (stored) {
-                    try { tags = JSON.parse(stored); if (!Array.isArray(tags)) tags = []; } catch (e) { tags = []; }
-                }
+                if (stored) { try { tags = JSON.parse(stored); if (!Array.isArray(tags)) tags = []; } catch (e) { tags =
+                    []; } }
                 if (!tags.length) tags = [{ id: "tag_default", name: "默认" }];
             }
-
-            function getDefaultTagId() { return tags[0]?.id || "tag_default"; }
 
             async function loadFromDefaultCloudKey() {
                 try {
                     const data = await readTextDB('zdscj20020308');
                     if (data) {
                         const parsed = JSON.parse(data);
-                        if (parsed.sites && Array.isArray(parsed.sites) && parsed.tags && Array.isArray(parsed.tags)) {
-                            sites = parsed.sites;
-                            tags = parsed.tags;
-                            if (parsed.clickCounts) clickCounts = parsed.clickCounts;
-                            return true;
-                        }
+                        if (parsed.sites && parsed.tags) { sites = parsed.sites;
+                            tags = parsed.tags; if (parsed.clickCounts) clickCounts = parsed.clickCounts; return true; }
                     }
-                    return false;
-                } catch (e) {
-                    console.warn('加载默认云端数据失败:', e);
-                    return false;
-                }
+                } catch (e) { console.warn('云端加载失败'); }
+                return false;
             }
 
             async function initData() {
                 initTags();
                 loadTitle();
                 loadCustomStyle();
-                const storedSites = localStorage.getItem(STORAGE_KEY);
-                if (storedSites) {
-                    try { sites = JSON.parse(storedSites); if (!Array.isArray(sites)) sites = []; } catch (e) { sites = []; }
-                    loadClickCounts();
-                } else {
-                    sites = [];
-                    const success = await loadFromDefaultCloudKey();
-                    if (!success) tags = [{ id: "tag_default", name: "默认" }];
+                const stored = localStorage.getItem(STORAGE_KEY);
+                if (stored) { try { sites = JSON.parse(stored); } catch (e) { sites = []; } loadClickCounts(); } else { sites =
+                        []; const ok = await loadFromDefaultCloudKey(); if (!ok) tags = [{ id: "tag_default",
+                        name: "默认"
+                    }];
                     saveToLocal();
-                    saveClickCounts();
-                }
-                const defaultTag = tags[0]?.id || "tag_default";
-                sites.forEach(s => { if (!s.tagId) s.tagId = defaultTag; });
+                    saveClickCounts(); }
+                sites.forEach(s => { if (!s.tagId) s.tagId = tags[0]?.id || "tag_default"; });
                 if (!tags.length) { tags = [{ id: "tag_default", name: "默认" }];
                     saveToLocal(); }
                 updateKeyStatusUI();
-                await fetchLunarData();
+                fetchLunarData();
             }
 
             function sortSitesBy(type) {
                 if (type === 'name') sites.sort((a, b) => a.name.localeCompare(b.name, 'zh'));
-                else if (type === 'frequency') sites.sort((a, b) => (clickCounts[b.url] || 0) - (clickCounts[a.url] || 0));
+                else sites.sort((a, b) => (clickCounts[b.url] || 0) - (clickCounts[a.url] || 0));
                 saveToLocal();
             }
 
             function applySortAndRender() {
-                if (currentSearchKeyword) {
-                    currentSearchKeyword = '';
-                    document.getElementById('globalSearchInput').value = '';
-                    renderSites();
-                } else {
-                    sortSitesBy(currentSort);
-                    renderSites();
-                }
+                if (currentSearchKeyword) { currentSearchKeyword = '';
+                    document.getElementById('globalSearchInput').value = ''; }
+                sortSitesBy(currentSort);
+                renderSites();
             }
 
-            // 标签栏渲染
             function renderTagBar() {
                 const container = document.getElementById('tagListContainer');
                 let html =
-                    `<div class="tag-item ${currentTagId === 'all' ? 'active' : ''}" data-tag="all"><span class="tag-name">全部</span></div>`;
-                tags.forEach(tag => {
-                    html +=
-                        `<div class="tag-item ${currentTagId === tag.id ? 'active' : ''}" data-tag="${tag.id}">
-                  <span class="tag-name">${escapeHtml(tag.name)}</span>
-                  <button class="edit-tag" data-tagid="${tag.id}" title="编辑标签"><i class="fas fa-edit"></i></button>
-                  <button class="del-tag" data-tagid="${tag.id}" title="删除标签"><i class="fas fa-trash-alt"></i></button>
-                </div>`;
-                });
+                    `<div class="tag-item ${currentTagId==='all'?'active':''}" data-tag="all">全部</div>`;
+                tags.forEach(tag => html += `
+                    <div class="tag-item ${currentTagId===tag.id?'active':''}" data-tag="${tag.id}">
+                        <span class="tag-name">${escapeHtml(tag.name)}</span>
+                        <button class="edit-tag" data-tagid="${tag.id}"><i class="fas fa-edit"></i></button>
+                        <button class="del-tag" data-tagid="${tag.id}"><i class="fas fa-trash-alt"></i></button>
+                    </div>`);
                 container.innerHTML = html;
                 document.querySelectorAll('.tag-item').forEach(el => {
-                    const tagId = el.dataset.tag;
                     el.addEventListener('click', (e) => {
-                        if (e.target.closest('.edit-tag') || e.target.closest('.del-tag')) return;
-                        currentTagId = tagId;
+                        if (e.target.closest('.edit-tag, .del-tag')) return;
+                        currentTagId = el.dataset.tag;
                         renderTagBar();
                         renderSites();
                     });
                 });
-                document.querySelectorAll('.edit-tag').forEach(btn => btn.addEventListener('click', (e) => { e
-                        .stopPropagation();
-                    editTagById(btn.dataset.tagid); }));
-                document.querySelectorAll('.del-tag').forEach(btn => btn.addEventListener('click', (e) => { e
-                        .stopPropagation();
-                    deleteTagById(btn.dataset.tagid); }));
+                document.querySelectorAll('.edit-tag').forEach(b => b.addEventListener('click', e => { e
+                    .stopPropagation();
+                    editTagById(b.dataset.tagid); }));
+                document.querySelectorAll('.del-tag').forEach(b => b.addEventListener('click', e => { e
+                    .stopPropagation();
+                    deleteTagById(b.dataset.tagid); }));
+                checkTagOverflow();
+            }
+
+            function checkTagOverflow() {
+                const list = document.getElementById('tagListContainer');
+                const expandBtn = document.getElementById('tagExpandBtn');
+                if (!list || !expandBtn) return;
+                if (list.scrollWidth > list.clientWidth + 2) {
+                    expandBtn.style.display = 'inline-flex';
+                } else {
+                    expandBtn.style.display = 'none';
+                    list.classList.remove('expanded');
+                }
+            }
+
+            function toggleTagExpand() {
+                const list = document.getElementById('tagListContainer');
+                list.classList.toggle('expanded');
             }
 
             function editTagById(tagId) {
-                const tag = tags.find(t => t.id === tagId);
-                if (!tag) return;
+                const tag = tags.find(t => t.id === tagId); if (!tag) return;
                 const newName = prompt("编辑标签名称", tag.name);
-                if (newName && newName.trim()) {
-                    if (tags.some(t => t.id !== tagId && t.name === newName.trim())) { showToast("标签名称已存在",
-                        "error"); return; }
+                if (newName && newName.trim() && !tags.some(t => t.id !== tagId && t.name === newName.trim())) {
                     tag.name = newName.trim();
                     saveToLocal();
                     renderTagBar();
                     renderSites();
-                }
+                } else if (newName && newName.trim()) showToast('名称重复', 1500);
             }
 
             function deleteTagById(tagId) {
-                if (tags.length <= 1) { showToast("至少保留一个标签", "warning"); return; }
-                const tag = tags.find(t => t.id === tagId);
-                if (!tag) return;
-                if (confirm(`删除标签"${tag.name}"，其下网站将移至"默认"标签，确定吗？`)) {
-                    const defaultTag = tags.find(t => t.name === "默认") || tags[0];
-                    sites.forEach(s => { if (s.tagId === tagId) s.tagId = defaultTag.id; });
-                    tags = tags.filter(t => t.id !== tagId);
-                    if (currentTagId === tagId) currentTagId = "all";
-                    saveToLocal();
-                    renderTagBar();
-                    renderSites();
-                    showToast(`已删除标签"${tag.name}"`);
-                }
+                if (tags.length <= 1) { showToast('至少保留一个标签', 1500); return; }
+                if (!confirm('删除标签？网站将移至默认标签')) return;
+                const defaultId = tags[0].id;
+                sites.forEach(s => { if (s.tagId === tagId) s.tagId = defaultId; });
+                tags = tags.filter(t => t.id !== tagId);
+                if (currentTagId === tagId) currentTagId = 'all';
+                saveToLocal();
+                renderTagBar();
+                renderSites();
             }
 
             function addNewTag() {
-                let newName = prompt("请输入新标签名称");
-                if (!newName || !newName.trim()) return;
-                newName = newName.trim();
-                if (tags.some(t => t.name === newName)) { showToast("标签已存在", "error"); return; }
-                const newId = "tag_" + Date.now() + "_" + Math.floor(Math.random() * 10000);
-                tags.push({ id: newId, name: newName });
+                const name = prompt("新标签名称"); if (!name || !name.trim()) return;
+                if (tags.some(t => t.name === name.trim())) { showToast('已存在', 1500); return; }
+                tags.push({ id: 'tag_' + Date.now(), name: name.trim() });
                 saveToLocal();
                 renderTagBar();
-                currentTagId = newId;
-                renderTagBar();
                 renderSites();
-                showToast(`标签"${newName}"已创建`);
             }
 
             function showManageTags() {
-                const container = document.getElementById('tagsManageList');
-                let html =
-                    `<div style="margin-bottom:16px;"><button id="quickAddTagBtn" class="btn-secondary" style="width:100%;">➕ 新建标签</button></div>`;
-                tags.forEach(tag => {
-                    html +=
-                        `<div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #e2dcd0;">
-                  <span>${escapeHtml(tag.name)}</span>
-                  <div>
-                    <button class="btn-secondary manage-edit-tag" data-id="${tag.id}" style="margin-right:8px;">编辑</button>
-                    <button class="btn-secondary manage-del-tag" data-id="${tag.id}" ${tags.length <= 1 ? 'disabled' : ''}>删除</button>
-                  </div>
-                </div>`;
-                });
-                container.innerHTML = html;
-                document.getElementById('quickAddTagBtn')?.addEventListener('click', () => { addNewTag();
+                const c = document.getElementById('tagsManageList');
+                c.innerHTML =
+                    `<button class="btn-secondary" id="quickAddTagBtn" style="width:100%;margin-bottom:16px;">➕ 新建标签</button>` +
+                    tags.map(t =>
+                        `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e2dcd0;"><span>${escapeHtml(t.name)}</span><div><button class="btn-secondary manage-edit" data-id="${t.id}">编辑</button><button class="btn-secondary manage-del" data-id="${t.id}" ${tags.length<=1?'disabled':''}>删除</button></div></div>`
+                        ).join('');
+                document.getElementById('quickAddTagBtn').onclick = () => { addNewTag();
+                    showManageTags(); };
+                c.querySelectorAll('.manage-edit').forEach(b => b.onclick = () => { editTagById(b.dataset.id);
                     showManageTags(); });
-                document.querySelectorAll('.manage-edit-tag').forEach(btn => btn.addEventListener('click', () => {
-                    editTagById(btn.dataset.id);
-                    showManageTags(); }));
-                document.querySelectorAll('.manage-del-tag').forEach(btn => btn.addEventListener('click', () => {
-                    deleteTagById(btn.dataset.id);
-                    showManageTags(); }));
+                c.querySelectorAll('.manage-del').forEach(b => b.onclick = () => { deleteTagById(b.dataset.id);
+                    showManageTags(); });
                 document.getElementById('manageTagsModal').style.display = 'flex';
             }
 
-            // ----- 网站操作 -----
             function openAddModal() {
-                const select = document.getElementById('modalTagSelect');
-                select.innerHTML = tags.map(t =>
-                    `<option value="${t.id}" ${currentTagId !== 'all' && currentTagId !== t.id ? '' : 'selected'}>${escapeHtml(t.name)}</option>`
-                    ).join('');
+                document.getElementById('modalTagSelect').innerHTML = tags.map(t =>
+                    `<option value="${t.id}">${escapeHtml(t.name)}</option>`).join('');
                 document.getElementById('addSiteModal').style.display = 'flex';
                 document.getElementById('modalAddUrl').value = '';
                 document.getElementById('modalAddName').value = '';
@@ -1700,18 +1598,15 @@
                 let url = document.getElementById('modalAddUrl').value.trim();
                 let name = document.getElementById('modalAddName').value.trim();
                 const tagId = document.getElementById('modalTagSelect').value;
-                if (!url) { showToast('请填写网址', 1200); return; }
+                if (!url) { showToast('填写网址', 1200); return; }
                 if (!url.startsWith('http')) url = 'https://' + url;
-                if (!name) {
-                    try { name = new URL(url).hostname.replace(/^www\./, ''); } catch (e) { name = '未命名'; }
-                }
+                if (!name) { try { name = new URL(url).hostname; } catch (e) { name = '未命名'; } }
                 if (sites.some(s => s.url === url)) { showToast('网址已存在', 1500); return; }
-                const newId = Date.now() + Math.floor(Math.random() * 100000);
-                sites.push({ id: newId, name: name.substring(0, 100), url, tagId });
+                sites.push({ id: Date.now(), name: name.substring(0, 100), url, tagId });
                 saveToLocal();
                 applySortAndRender();
                 closeAddModal();
-                showToast(`✨ 已添加 ${name}`);
+                showToast(`已添加 ${name}`);
             }
 
             function closeAddModal() {
@@ -1721,108 +1616,70 @@
             }
 
             function openEditModalById(id) {
-                const site = sites.find(s => s.id === id);
-                if (!site) return;
+                const site = sites.find(s => s.id === id); if (!site) return;
                 editId = id;
                 document.getElementById('editName').value = site.name;
                 document.getElementById('editUrl').value = site.url;
-                const select = document.getElementById('editTagSelect');
-                select.innerHTML = tags.map(t =>
-                    `<option value="${t.id}" ${t.id === site.tagId ? 'selected' : ''}>${escapeHtml(t.name)}</option>`).join(
+                document.getElementById('editTagSelect').innerHTML = tags.map(t =>
+                    `<option value="${t.id}" ${t.id===site.tagId?'selected':''}>${escapeHtml(t.name)}</option>`).join(
                     '');
                 document.getElementById('editModal').style.display = 'flex';
             }
 
             function saveEdit() {
                 if (editId === null) return;
-                const newName = document.getElementById('editName').value.trim();
-                let newUrl = document.getElementById('editUrl').value.trim();
-                const newTagId = document.getElementById('editTagSelect').value;
-                if (!newName || !newUrl) { showToast('名称和网址不能为空', 1200); return; }
-                if (!newUrl.startsWith('http')) newUrl = 'https://' + newUrl;
-                const idx = sites.findIndex(s => s.id === editId);
-                if (idx !== -1) {
-                    if (sites.some(s => s.id !== editId && s.url === newUrl)) { showToast('网址已存在', 1500); return; }
-                    sites[idx].name = newName;
-                    sites[idx].url = newUrl;
-                    sites[idx].tagId = newTagId;
+                const name = document.getElementById('editName').value.trim();
+                let url = document.getElementById('editUrl').value.trim();
+                const tagId = document.getElementById('editTagSelect').value;
+                if (!name || !url) { showToast('不能为空', 1200); return; }
+                if (!url.startsWith('http')) url = 'https://' + url;
+                if (sites.some(s => s.id !== editId && s.url === url)) { showToast('网址重复', 1500); return; }
+                const site = sites.find(s => s.id === editId);
+                if (site) { site.name = name;
+                    site.url = url;
+                    site.tagId = tagId;
                     saveToLocal();
                     applySortAndRender();
-                    showToast('修改成功');
-                }
+                    showToast('已保存'); }
                 closeEditModal();
             }
 
             function closeEditModal() { document.getElementById('editModal').style.display = 'none';
                 editId = null; }
 
-            function enterDeleteMode() {
-                if (editMode) exitEditMode();
-                deleteMode = true;
+            function enterEditMode() { editMode = true;
+                document.getElementById('editModeBtnMenu').textContent = '取消编辑'; if (deleteMode) exitDeleteMode();
+                renderSites(); }
+
+            function exitEditMode() { editMode = false;
+                document.getElementById('editModeBtnMenu').textContent = '编辑';
+                renderSites(); }
+
+            function enterDeleteMode() { deleteMode = true;
                 selectedIds.clear();
-                const delBtn = document.getElementById('deleteModeBtn');
-                delBtn.textContent = '取消删除';
-                delBtn.classList.add('active');
-                if (sortableInstance) sortableInstance.destroy();
-                sortableInstance = null;
-                renderSites();
-            }
+                document.getElementById('deleteModeBtnMenu').textContent = '取消删除'; if (editMode) exitEditMode();
+                renderSites(); }
 
-            function exitDeleteMode(resetSelection = true) {
-                deleteMode = false;
-                if (resetSelection) selectedIds.clear();
-                const delBtn = document.getElementById('deleteModeBtn');
-                delBtn.textContent = '删除';
-                delBtn.classList.remove('active');
-                reinitSortable();
-                renderSites();
-            }
-
-            function updateDeleteButtonText() {
-                if (!deleteMode) return;
-                const delBtn = document.getElementById('deleteModeBtn');
-                delBtn.textContent = selectedIds.size > 0 ? '确认删除' : '取消删除';
-            }
-
-            function confirmDeleteSelected() {
-                if (selectedIds.size === 0) { exitDeleteMode(true); return; }
-                const toDelete = sites.filter(s => selectedIds.has(s.id));
-                const names = toDelete.map(s => s.name).join('、');
-                if (confirm(`确认删除以下 ${toDelete.length} 个网站吗？\n${names}`)) {
-                    sites = sites.filter(s => !selectedIds.has(s.id));
-                    saveToLocal();
-                    exitDeleteMode(true);
-                    applySortAndRender();
-                    showToast(`已删除 ${toDelete.length} 个网站`);
-                } else updateDeleteButtonText();
-            }
+            function exitDeleteMode() { deleteMode = false;
+                selectedIds.clear();
+                document.getElementById('deleteModeBtnMenu').textContent = '删除';
+                renderSites(); }
 
             function toggleDeleteSelection(id) {
                 if (selectedIds.has(id)) selectedIds.delete(id);
                 else selectedIds.add(id);
-                updateDeleteButtonText();
-                const card = document.querySelector(`.card[data-id='${id}']`);
-                if (card) card.classList.toggle('selected', selectedIds.has(id));
+                document.querySelector(`.card[data-id='${id}']`)?.classList.toggle('selected', selectedIds.has(id));
             }
 
-            function enterEditMode() {
-                if (deleteMode) exitDeleteMode(true);
-                editMode = true;
-                const editBtn = document.getElementById('editModeBtn');
-                editBtn.textContent = '取消编辑';
-                editBtn.classList.add('active');
-                if (sortableInstance) sortableInstance.destroy();
-                sortableInstance = null;
-                renderSites();
-            }
-
-            function exitEditMode() {
-                editMode = false;
-                const editBtn = document.getElementById('editModeBtn');
-                editBtn.textContent = '编辑';
-                editBtn.classList.remove('active');
-                reinitSortable();
-                renderSites();
+            function confirmDeleteSelected() {
+                if (selectedIds.size === 0) { exitDeleteMode(); return; }
+                if (confirm(`确认删除 ${selectedIds.size} 个网站？`)) {
+                    sites = sites.filter(s => !selectedIds.has(s.id));
+                    saveToLocal();
+                    exitDeleteMode();
+                    applySortAndRender();
+                    showToast('已删除');
+                }
             }
 
             function reinitSortable() {
@@ -1834,108 +1691,66 @@
                         animation: 200,
                         onEnd: () => {
                             const cards = document.querySelectorAll('.card');
-                            const newOrder = [];
-                            cards.forEach(card => {
-                                const id = Number(card.dataset.id);
-                                const found = sites.find(s => s.id === id);
-                                if (found) newOrder.push(found);
-                            });
-                            if (newOrder.length === sites.length) { sites = newOrder;
-                                saveToLocal(); if (currentSearchKeyword) renderSites(); } else renderSites();
+                            sites = Array.from(cards).map(c => sites.find(s => s.id === Number(c.dataset
+                                .id))).filter(Boolean);
+                            saveToLocal();
+                            renderSites();
                         }
                     });
-                } else sortableInstance = null;
+                }
             }
 
-            // 核心渲染函数（已修复字体回退问题）
             function renderSites() {
                 const container = document.getElementById('sitesGridContainer');
-                if (!container) return;
-
-                // ★ 关键修复：在生成HTML之前获取用户自定义的字体大小
                 const customFontSize = getCustomFontSize();
-
                 let filtered = currentTagId === 'all' ? sites : sites.filter(s => s.tagId === currentTagId);
                 if (currentSearchKeyword) {
-                    const keyword = currentSearchKeyword.toLowerCase().trim();
-                    if (keyword) {
-                        const matched = [];
-                        const unmatched = [];
-                        filtered.forEach(site => {
-                            if (site.name.toLowerCase().includes(keyword)) matched.push(site);
-                            else unmatched.push(site);
-                        });
-                        filtered = matched.concat(unmatched);
-                    }
+                    const kw = currentSearchKeyword.toLowerCase();
+                    const matched = filtered.filter(s => s.name.toLowerCase().includes(kw));
+                    const unmatched = filtered.filter(s => !s.name.toLowerCase().includes(kw));
+                    filtered = matched.concat(unmatched);
                 }
-
-                if (filtered.length === 0) {
+                if (!filtered.length) {
                     container.innerHTML =
-                        `<div class="empty-state"><i class="fas fa-folder-open"></i><p>暂无网站，点击「添加网站」或导入收藏夹</p></div>`;
-                    if (!editMode && !deleteMode && currentTagId === 'all' && !currentSearchKeyword) reinitSortable();
-                    else if (sortableInstance) sortableInstance.destroy();
+                        '<div class="empty-state"><i class="fas fa-folder-open"></i><p>暂无网站</p></div>';
                     return;
                 }
                 let html = '';
                 filtered.forEach(site => {
-                    const selectedClass = (deleteMode && selectedIds.has(site.id)) ? 'selected' : '';
-                    const highlightClass = (currentSearchKeyword && site.name.toLowerCase().includes(
-                        currentSearchKeyword.toLowerCase().trim())) ? 'highlight' : '';
-                    // ★ 在链接中直接内联字体大小，确保搜索重新渲染后字体不会回退
-                    html +=
-                        `<div class="card ${selectedClass} ${highlightClass}" data-id="${site.id}">
-                  <i class="fas fa-grip-vertical drag-handle"></i>
-                  <a href="${escapeHtml(site.url)}" target="_blank" rel="noopener noreferrer" class="site-name-link"
-                     data-id="${site.id}" data-url="${escapeHtml(site.url)}"
-                     title="访问 ${escapeHtml(site.name)}"
-                     style="font-size:${customFontSize}px;">${escapeHtml(site.name)}</a>
-                  <select class="site-tag-select" data-id="${site.id}">
-                    ${tags.map(t => `<option value="${t.id}" ${t.id === site.tagId ? 'selected' : ''}>${escapeHtml(t.name)}</option>`).join('')}
-                  </select>
-                </div>`;
+                    const sel = deleteMode && selectedIds.has(site.id) ? 'selected' : '';
+                    const hl = currentSearchKeyword && site.name.toLowerCase().includes(currentSearchKeyword
+                        .toLowerCase()) ? 'highlight' : '';
+                    html += `<div class="card ${sel} ${hl}" data-id="${site.id}">
+                        <i class="fas fa-grip-vertical drag-handle"></i>
+                        <a href="${escapeHtml(site.url)}" target="_blank" class="site-name-link" data-url="${escapeHtml(site.url)}" style="font-size:${customFontSize}px;">${escapeHtml(site.name)}</a>
+                        <select class="site-tag-select">${tags.map(t => `<option value="${t.id}" ${t.id===site.tagId?'selected':''}>${escapeHtml(t.name)}</option>`).join('')}</select>
+                    </div>`;
                 });
                 container.innerHTML = html;
-                document.querySelectorAll('.card').forEach(card => {
+                container.querySelectorAll('.card').forEach(card => {
                     const id = Number(card.dataset.id);
                     const link = card.querySelector('.site-name-link');
-                    if (link && (editMode || deleteMode)) {
+                    if (editMode || deleteMode) {
                         const newLink = link.cloneNode(true);
-                        link.parentNode.replaceChild(newLink, link);
-                        newLink.addEventListener('click', (e) => { e.preventDefault(); if (editMode)
-                                openEditModalById(id); else if (deleteMode) toggleDeleteSelection(
-                                id); });
-                    } else if (link && !editMode && !deleteMode) {
-                        link.addEventListener('click', (e) => { incrementClickCount(link.getAttribute(
-                                'data-url')); });
+                        link.replaceWith(newLink);
+                        newLink.addEventListener('click', e => { e.preventDefault();
+                            editMode ? openEditModalById(id) : toggleDeleteSelection(id); });
+                    } else {
+                        link.addEventListener('click', () => incrementClickCount(link.dataset.url));
                     }
-                    card.addEventListener('click', (e) => {
-                        if (e.target.closest('.site-name-link') || e.target.closest('.site-tag-select'))
-                            return;
-                        if (editMode) openEditModalById(id);
-                        else if (deleteMode) toggleDeleteSelection(id);
-                    });
-                    const tagSelect = card.querySelector('.site-tag-select');
-                    tagSelect?.addEventListener('change', (e) => {
-                        e.stopPropagation();
+                    card.querySelector('.site-tag-select').addEventListener('change', e => {
                         const site = sites.find(s => s.id === id);
-                        if (site && site.tagId !== tagSelect.value) { site.tagId = tagSelect.value;
+                        if (site) { site.tagId = e.target.value;
                             saveToLocal();
                             renderSites();
-                            showToast(
-                                `已移动至 ${tags.find(t => t.id === tagSelect.value)?.name}`); }
+                            showToast('已移动'); }
                     });
                 });
                 if (currentSearchKeyword) {
-                    const firstHighlight = container.querySelector('.card.highlight');
-                    if (firstHighlight) {
-                        firstHighlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
+                    const first = container.querySelector('.card.highlight');
+                    if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
-                if (!editMode && !deleteMode && currentTagId === 'all' && !currentSearchKeyword) reinitSortable();
-                else if (sortableInstance) sortableInstance.destroy();
-
-                // 同步body等其他样式（此时链接已有内联font-size，不会被覆盖）
-                loadCustomStyle();
+                reinitSortable();
             }
 
             function clearSearch() {
@@ -1946,369 +1761,311 @@
                 renderSites();
             }
 
-            function handleGlobalSearchInput() {
-                const value = document.getElementById('globalSearchInput').value.trim();
-                currentSearchKeyword = value;
-                if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
-                if (!value) { sortSitesBy(currentSort);
-                    renderSites(); return; }
+            function handleSearchInput() {
+                const val = document.getElementById('globalSearchInput').value.trim();
+                currentSearchKeyword = val;
+                if (!val) { clearSearch(); return; }
                 renderSites();
-                const hasMatch = sites.some(site => site.name.toLowerCase().includes(value.toLowerCase()));
-                if (!hasMatch) {
-                    searchDebounceTimer = setTimeout(() => {
-                        performWebSearch(value);
-                        searchDebounceTimer = null;
-                    }, 500);
+                if (!sites.some(s => s.name.toLowerCase().includes(val.toLowerCase()))) {
+                    searchDebounceTimer = setTimeout(() => performWebSearch(val), 500);
                 }
             }
 
             function performWebSearch(keyword) {
-                const select = document.getElementById('engineSelect');
-                const engine = select.value;
-                let url = '';
-                if (engine === 'baidu') url = `https://www.baidu.com/s?wd=${encodeURIComponent(keyword)}`;
-                else if (engine === 'bing') url =
-                    `https://cn.bing.com/search?q=${encodeURIComponent(keyword)}`;
-                else if (engine === 'google') url =
-                    `https://www.google.com/search?q=${encodeURIComponent(keyword)}`;
-                if (url) { window.open(url, '_blank');
-                    showToast(`未找到站内匹配，已跳转 ${select.options[select.selectedIndex].text} 搜索`, 1500); }
+                const engine = document.getElementById('engineSelect').value;
+                const urls = { baidu: 'https://www.baidu.com/s?wd=', bing: 'https://cn.bing.com/search?q=',
+                    google: 'https://www.google.com/search?q=' };
+                window.open(urls[engine] + encodeURIComponent(keyword), '_blank');
+                showToast('已跳转外部搜索', 1500);
             }
 
             function clearAllSites() {
-                if (sites.length === 0) { showToast('当前没有网站可清空', 1500); return; }
-                if (confirm('⚠️ 确定要清空所有网站吗？此操作不可撤销！')) {
-                    sites = [];
+                if (!sites.length) { showToast('无网站'); return; }
+                if (confirm('清空所有网站？')) { sites = [];
                     saveToLocal();
                     clearSearch();
                     renderSites();
-                    showToast('已清空所有网站', 1500);
-                }
+                    showToast('已清空'); }
             }
 
-            // 导入收藏夹
-            async function importBookmarksFromHtml(file) {
+            async function importBookmarks(file) {
                 return new Promise((resolve, reject) => {
                     const reader = new FileReader();
-                    reader.onload = (e) => {
+                    reader.onload = e => {
                         const doc = new DOMParser().parseFromString(e.target.result, 'text/html');
                         const links = doc.querySelectorAll('a');
-                        if (links.length === 0) reject('未找到链接');
-                        const newSites = [],
-                            existing = new Set(sites.map(s => s.url));
-                        const defaultTag = tags[0]?.id || "tag_default";
-                        for (let link of links) {
-                            let href = link.getAttribute('href');
-                            let title = link.textContent?.trim() || link.getAttribute('title') || '';
-                            if (!href || (!href.startsWith('http') && !href.startsWith('https'))) continue;
-                            if (!title) try { title = new URL(href).hostname; } catch (e) { title = '导入站点'; }
+                        const existing = new Set(sites.map(s => s.url));
+                        const newSites = [];
+                        links.forEach(a => {
+                            let href = a.getAttribute('href');
+                            if (!href || !href.startsWith('http')) return;
+                            let title = a.textContent?.trim() || new URL(href).hostname;
                             if (!existing.has(href)) {
-                                newSites.push({ id: Date.now() + Math.random() * 10000 + newSites.length,
-                                    name: title.substring(0, 100), url: href, tagId: defaultTag });
+                                newSites.push({ id: Date.now() + Math.random(), name: title.substring(0,
+                                        100), url: href, tagId: tags[0]?.id || 'tag_default' });
                                 existing.add(href);
                             }
-                        }
+                        });
                         resolve(newSites);
                     };
-                    reader.onerror = () => reject('文件读取失败');
-                    reader.readAsText(file, 'UTF-8');
+                    reader.onerror = () => reject();
+                    reader.readAsText(file);
                 });
             }
+
             async function handleImport(file) {
                 if (!file) return;
                 try {
-                    const imported = await importBookmarksFromHtml(file);
-                    if (!imported.length) { showToast('无新链接或格式无效', 2000); return; }
-                    sites.push(...imported);
-                    saveToLocal();
-                    applySortAndRender();
-                    showToast(`📥 成功导入 ${imported.length} 个站点`, 2000);
-                } catch (e) { showToast('解析失败，请检查文件格式', 2500); }
+                    const imported = await importBookmarks(file);
+                    if (imported.length) { sites.push(...imported);
+                        saveToLocal();
+                        applySortAndRender();
+                        showToast(`导入 ${imported.length} 个`); } else showToast('无新链接');
+                } catch (e) { showToast('解析失败'); }
             }
 
-            // 云端备份 (分片稳定版)
             const MAX_VALUE_SIZE = 200000;
             async function writeTextDB(key, value) {
-                const url =
-                    `https://textdb.online/update/?key=${encodeURIComponent(key)}&value=${encodeURIComponent(value)}`;
-                const resp = await fetch(url, { method: 'POST' });
-                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                const resp = await fetch(
+                    `https://textdb.online/update/?key=${encodeURIComponent(key)}&value=${encodeURIComponent(value)}`, {
+                        method: 'POST' });
+                if (!resp.ok) throw new Error('网络错误');
                 const json = await resp.json();
-                if (json.status !== 1) throw new Error(`API返回失败`);
-                return json;
+                if (json.status !== 1) throw new Error('API失败');
             }
             async function readTextDB(key) {
-                const resp = await fetch(`https://textdb.online/${encodeURIComponent(key)}`, { method: 'GET' });
-                if (!resp.ok) return null;
-                return await resp.text() || null;
+                const resp = await fetch(`https://textdb.online/${encodeURIComponent(key)}`);
+                return resp.ok ? await resp.text() : null;
             }
+
             async function backupToCloud() {
-                const masterKey = document.getElementById('cloudKey').value.trim();
-                if (!/^[0-9a-zA-Z\-_]{6,60}$/.test(masterKey)) { showToast('主KEY格式无效', 3000); return; }
-                const data = { sites, tags, clickCounts };
-                const dataStr = JSON.stringify(data);
-                const totalLen = dataStr.length;
+                const key = document.getElementById('cloudKey').value.trim();
+                if (!/^[0-9a-zA-Z\-_]{6,60}$/.test(key)) { showToast('KEY无效', 3000); return; }
+                const data = JSON.stringify({ sites, tags, clickCounts });
                 const btn = document.getElementById('backupToCloudBtn');
                 btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> 备份中...';
+                btn.innerHTML = '备份中...';
                 try {
-                    if (totalLen <= MAX_VALUE_SIZE) {
-                        await writeTextDB(masterKey, dataStr);
-                        showToast('✅ 云端备份成功 (单片)', 2000);
-                    } else {
-                        const CHUNK_SIZE = 180000;
-                        const batchCount = Math.ceil(totalLen / CHUNK_SIZE);
-                        await writeTextDB(masterKey, JSON.stringify({ batches: batchCount }));
-                        for (let i = 0; i < batchCount; i++) {
-                            const start = i * CHUNK_SIZE;
-                            const end = Math.min(start + CHUNK_SIZE, totalLen);
-                            const chunk = dataStr.substring(start, end);
-                            await writeTextDB(`${masterKey}_batch${i}`, chunk);
-                        }
-                        showToast(`✅ 云端备份成功 (分${batchCount}片)`, 3000);
+                    if (data.length <= MAX_VALUE_SIZE) await writeTextDB(key, data);
+                    else {
+                        const chunks = Math.ceil(data.length / 180000);
+                        await writeTextDB(key, JSON.stringify({ batches: chunks }));
+                        for (let i = 0; i < chunks; i++) await writeTextDB(`${key}_batch${i}`, data.substring(i *
+                            180000, (i + 1) * 180000));
                     }
-                } catch (err) { showToast(`❌ 云端备份失败: ${err.message}`, 4000);
+                    showToast('✅ 云端备份成功');
+                } catch (e) { showToast('备份失败');
                     backupToLocal(); } finally { btn.disabled = false;
                     btn.innerHTML = '<i class="fas fa-upload"></i> 分片备份'; }
             }
+
             async function restoreFromCloud() {
-                const masterKey = document.getElementById('cloudKey').value.trim();
-                if (!/^[0-9a-zA-Z\-_]{6,60}$/.test(masterKey)) { showToast('主KEY格式不正确', 3000); return; }
+                const key = document.getElementById('cloudKey').value.trim();
+                if (!/^[0-9a-zA-Z\-_]{6,60}$/.test(key)) { showToast('KEY无效', 3000); return; }
                 const btn = document.getElementById('restoreFromCloudBtn');
                 btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> 恢复中...';
+                btn.innerHTML = '恢复中...';
                 try {
-                    const masterData = await readTextDB(masterKey);
-                    if (!masterData) { showToast('云端无数据', 3000); return; }
+                    let master = await readTextDB(key);
+                    if (!master) { showToast('云端无数据'); return; }
                     let fullData = '';
-                    if (masterData.trim().startsWith('{') && masterData.includes('"batches"')) {
-                        let meta; try { meta = JSON.parse(masterData); } catch (e) { meta = null; }
-                        if (meta && meta.batches) {
-                            const chunks = [];
-                            for (let i = 0; i < meta.batches; i++) {
-                                const chunk = await readTextDB(`${masterKey}_batch${i}`);
-                                if (chunk === null) throw new Error(`缺少分片 _batch${i}`);
-                                chunks.push(chunk);
-                            }
-                            fullData = chunks.join('');
-                        } else fullData = masterData;
-                    } else fullData = masterData;
-                    if (!fullData) throw new Error('数据为空');
+                    if (master.includes('"batches"')) {
+                        const meta = JSON.parse(master);
+                        const parts = [];
+                        for (let i = 0; i < meta.batches; i++) parts.push(await readTextDB(
+                            `${key}_batch${i}`));
+                        fullData = parts.join('');
+                    } else fullData = master;
                     const restored = JSON.parse(fullData);
-                    if (restored.sites && Array.isArray(restored.sites) && restored.tags && Array.isArray(restored
-                            .tags)) {
-                        if (confirm(`从云端恢复将覆盖当前所有网站和标签，确定吗？`)) {
+                    if (restored.sites && restored.tags) {
+                        if (confirm('覆盖当前数据？')) {
                             sites = restored.sites;
-                            tags = restored.tags;
-                            if (restored.clickCounts) clickCounts = restored.clickCounts;
+                            tags = restored.tags; if (restored.clickCounts) clickCounts = restored.clickCounts;
                             saveToLocal();
                             saveClickCounts();
                             renderTagBar();
                             applySortAndRender();
-                            showToast(`🌐 已从云端恢复 ${sites.length} 个站点`, 2000);
+                            showToast('已恢复');
                         }
-                    } else throw new Error('数据结构不完整');
-                } catch (err) { showToast(`恢复失败: ${err.message}`, 4000); } finally { btn.disabled = false;
+                    }
+                } catch (e) { showToast('恢复失败'); } finally { btn.disabled = false;
                     btn.innerHTML = '<i class="fas fa-download"></i> 分片恢复'; }
             }
 
             function generateRandomKey() {
-                const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_';
-                let result = '';
-                for (let i = 0; i < 20; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
-                document.getElementById('cloudKey').value = result;
-                showToast('已生成随机KEY', 1500);
+                let r = '';
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+                for (let i = 0; i < 20; i++) r += chars.charAt(Math.floor(Math.random() * chars.length));
+                document.getElementById('cloudKey').value = r;
+                showToast('已生成KEY');
             }
 
             function backupToLocal() {
-                const data = { sites, tags, clickCounts };
-                const dataStr = JSON.stringify(data, null, 2);
-                const blob = new Blob([dataStr], { type: 'application/json' });
+                const blob = new Blob([JSON.stringify({ sites, tags, clickCounts }, null, 2)], { type: 'application/json' });
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(blob);
-                a.download = `tender_backup_${new Date().toISOString().slice(0, 19)}.json`;
+                a.download = `tender_backup_${new Date().toISOString().slice(0, 10)}.json`;
                 a.click();
-                URL.revokeObjectURL(a.href);
-                showToast('✅ 已备份到本地', 1500);
+                showToast('已备份本地');
             }
 
             function triggerLocalRestore() { document.getElementById('localRestoreFile').click(); }
 
             function handleLocalRestore(file) {
-                if (!file) return;
                 const reader = new FileReader();
-                reader.onload = (e) => {
+                reader.onload = e => {
                     try {
-                        const restored = JSON.parse(e.target.result);
-                        if (restored.sites && Array.isArray(restored.sites) && restored.tags && Array.isArray(
-                                restored.tags)) {
-                            if (confirm(`从本地恢复将覆盖当前所有网站和标签，确定吗？`)) {
-                                sites = restored.sites;
-                                tags = restored.tags;
-                                if (restored.clickCounts) clickCounts = restored.clickCounts;
+                        const data = JSON.parse(e.target.result);
+                        if (data.sites && data.tags) {
+                            if (confirm('覆盖当前数据？')) {
+                                sites = data.sites;
+                                tags = data.tags; if (data.clickCounts) clickCounts = data.clickCounts;
                                 saveToLocal();
                                 saveClickCounts();
                                 renderTagBar();
                                 applySortAndRender();
-                                showToast(`📁 已从本地恢复 ${sites.length} 个站点`, 2000);
+                                showToast('已恢复本地');
                             }
-                        } else throw new Error('文件格式错误');
-                    } catch (err) { showToast('恢复失败：文件解析错误', 3000); }
+                        }
+                    } catch (err) { showToast('文件错误'); }
                 };
                 reader.readAsText(file);
             }
 
-            function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;',
-                    '>': '&gt;' }[m])); }
+            function escapeHtml(str) { return str?.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[
+                m])) || ''; }
+
+            function checkBackupOverflow() {
+                const inner = document.getElementById('backupInner');
+                const btn = document.getElementById('backupExpandBtn');
+                if (inner.scrollWidth > inner.clientWidth + 2) btn.style.display = 'inline-flex';
+                else { btn.style.display = 'none';
+                    inner.classList.remove('expanded'); }
+            }
+
+            function toggleBackupExpand() {
+                const inner = document.getElementById('backupInner');
+                inner.classList.toggle('expanded');
+            }
 
             function bindEvents() {
                 document.getElementById('openCustomModalBtn').addEventListener('click', openCustomModal);
                 document.getElementById('closeCustomBtn').addEventListener('click', closeCustomModal);
-                document.getElementById('saveCustomBtn').addEventListener('click', function() {
-                    const title = document.getElementById('customTitle').value.trim() || '投标';
-                    const bgColor = document.getElementById('customBgColor').value || '#ecece4';
-                    const textColor = document.getElementById('customTextColor').value || '#2c3e2f';
-                    const fontSize = parseInt(document.getElementById('customFontSize').value) || 15;
+                document.getElementById('saveCustomBtn').addEventListener('click', () => {
+                    const custom = {
+                        title: document.getElementById('customTitle').value.trim() || '投标',
+                        bgColor: document.getElementById('customBgColor').value,
+                        textColor: document.getElementById('customTextColor').value,
+                        fontSize: parseInt(document.getElementById('customFontSize').value) || 15
+                    };
                     const apiKey = document.getElementById('customApiKey').value.trim();
-                    const custom = { title, bgColor, textColor, fontSize };
+                    if (apiKey && (apiKey.length <= 10 || !/^[A-Za-z0-9]+$/.test(apiKey))) { showToast(
+                        '密钥格式无效'); return; }
+                    if (apiKey) localStorage.setItem(API_KEY_KEY, apiKey);
+                    else localStorage.removeItem(API_KEY_KEY);
                     saveCustomStyle(custom);
-                    document.getElementById('editableTitle').textContent = title;
-                    if (apiKey) {
-                        if (apiKey.length > 10 && /^[A-Za-z0-9]+$/.test(apiKey)) {
-                            localStorage.setItem(API_KEY_KEY, apiKey);
-                            showToast('自定义密钥已保存', 1500);
-                        } else { showToast('密钥格式无效，请检查（需10位以上字母数字）', 3000); return; }
-                    } else { localStorage.removeItem(API_KEY_KEY);
-                        showToast('已切换为默认密钥', 1500); }
-                    updateKeyStatusUI();
                     closeCustomModal();
                     fetchLunarData();
-                    // 保存后立即重新渲染以应用新字体
                     renderSites();
+                    updateKeyStatusUI();
                 });
-                document.getElementById('resetCustomBtn').addEventListener('click', function() {
-                    if (confirm('确定恢复默认样式吗？（API密钥不受影响）')) { resetCustomStyle();
-                        closeCustomModal();
-                        renderSites(); }
-                });
-                document.getElementById('resetApiKeyBtn').addEventListener('click', function() {
-                    if (confirm('确定重置API密钥为默认密钥吗？')) { resetApiKey(); }
-                });
-                document.getElementById('customBgColor').addEventListener('input', function() {
-                    document.getElementById('customBgColorText').value = this.value;
-                });
-                document.getElementById('customBgColorText').addEventListener('input', function() {
-                    document.getElementById('customBgColor').value = this.value;
-                });
-                document.getElementById('customTextColor').addEventListener('input', function() {
-                    document.getElementById('customTextColorText').value = this.value;
-                });
-                document.getElementById('customTextColorText').addEventListener('input', function() {
-                    document.getElementById('customTextColor').value = this.value;
-                });
+                document.getElementById('resetCustomBtn').addEventListener('click', () => { resetCustomStyle();
+                    closeCustomModal();
+                    renderSites(); });
+                document.getElementById('resetApiKeyBtn').addEventListener('click', resetApiKey);
+                document.getElementById('customBgColor').addEventListener('input', function() { document.getElementById(
+                    'customBgColorText').value = this.value; });
+                document.getElementById('customBgColorText').addEventListener('input', function() { document.getElementById(
+                    'customBgColor').value = this.value; });
+                document.getElementById('customTextColor').addEventListener('input', function() { document.getElementById(
+                    'customTextColorText').value = this.value; });
+                document.getElementById('customTextColorText').addEventListener('input', function() { document.getElementById(
+                    'customTextColor').value = this.value; });
                 document.getElementById('editableTitle').addEventListener('dblclick', function() {
-                    const current = this.textContent;
-                    const newTitle = prompt('请输入"投标"部分的自定义名称（将显示为"XXX·导航"）', current);
-                    if (newTitle !== null && newTitle.trim() !== '') {
-                        saveTitle(newTitle.trim());
-                        const custom = loadCustomStyle();
-                        custom.title = newTitle.trim();
-                        saveCustomStyle(custom);
-                        showToast('标题已更新', 1500);
-                    }
+                    const val = prompt('标题', this.textContent);
+                    if (val && val.trim()) { saveTitle(val.trim());
+                        const c = loadCustomStyle();
+                        c.title = val.trim();
+                        saveCustomStyle(c); }
+                });
+
+                document.getElementById('huangliBtn').addEventListener('click', showCalendar);
+                document.getElementById('closeCalendarBtn').addEventListener('click', closeCalendar);
+                document.getElementById('calcDateToggleBtn').addEventListener('click', () => {
+                    document.getElementById('dateCalcPopup').classList.toggle('show');
                 });
                 document.getElementById('calcDateBtn').addEventListener('click', calcDate);
                 document.getElementById('clearDateBtn').addEventListener('click', clearDateFields);
-                document.querySelectorAll('#startDate, #endDate, #diffDays').forEach(el => {
-                    el.addEventListener('keypress', function(e) { if (e.key === 'Enter') calcDate(); });
+
+                document.getElementById('globalSearchInput').addEventListener('input', handleSearchInput);
+                document.getElementById('engineSearchBtn').addEventListener('click', () => {
+                    const kw = document.getElementById('globalSearchInput').value.trim();
+                    if (kw) performWebSearch(kw);
                 });
-                document.getElementById('dateArea').addEventListener('click', showCalendar);
-                document.getElementById('closeCalendarBtn').addEventListener('click', closeCalendar);
-                window.addEventListener('click', function(e) {
+                document.getElementById('sortByNameBtn').addEventListener('click', () => { currentSort = 'name';
+                    clearSearch(); });
+                document.getElementById('sortByFreqBtn').addEventListener('click', () => { currentSort = 'frequency';
+                    clearSearch(); });
+                document.getElementById('operationsBtn').addEventListener('click', e => {
+                    e.stopPropagation();
+                    document.getElementById('operationsDropdown').classList.toggle('show');
+                });
+                document.addEventListener('click', () => document.getElementById('operationsDropdown').classList.remove(
+                    'show'));
+                document.getElementById('editModeBtnMenu').addEventListener('click', () => { editMode ? exitEditMode() :
+                    enterEditMode(); });
+                document.getElementById('deleteModeBtnMenu').addEventListener('click', () => { deleteMode ? (selectedIds
+                    .size ? confirmDeleteSelected() : exitDeleteMode()) : enterDeleteMode(); });
+                document.getElementById('importFileInput').addEventListener('change', e => { if (e.target.files[0])
+                        handleImport(e.target.files[0]); });
+                document.getElementById('openAddSiteModalBtnMenu').addEventListener('click', openAddModal);
+                document.getElementById('clearAllSitesBtnMenu').addEventListener('click', clearAllSites);
+                document.getElementById('sortByNameBtnMenu').addEventListener('click', () => { currentSort = 'name';
+                    clearSearch(); });
+                document.getElementById('sortByFreqBtnMenu').addEventListener('click', () => { currentSort = 'frequency';
+                    clearSearch(); });
+
+                document.getElementById('closeModalBtn').addEventListener('click', closeAddModal);
+                document.getElementById('modalAddSiteBtn').addEventListener('click', addSiteFromModal);
+                document.getElementById('modalAddUrl').addEventListener('paste', function(e) {
+                    const pasted = (e.clipboardData || window.clipboardData).getData('text');
+                    const parsed = parseTitleUrl(pasted);
+                    if (parsed.url) {
+                        this.value = parsed.url;
+                        if (!document.getElementById('modalAddName').value.trim()) document.getElementById(
+                            'modalAddName').value = parsed.title;
+                        e.preventDefault();
+                    }
+                });
+                document.getElementById('closeEditModalBtn').addEventListener('click', closeEditModal);
+                document.getElementById('saveEditBtn').addEventListener('click', saveEdit);
+                document.getElementById('manageTagsBtn').addEventListener('click', showManageTags);
+                document.getElementById('closeManageTagsBtn').addEventListener('click', () => document.getElementById(
+                    'manageTagsModal').style.display = 'none');
+                document.getElementById('tagExpandBtn').addEventListener('click', toggleTagExpand);
+                document.getElementById('backupToCloudBtn').addEventListener('click', backupToCloud);
+                document.getElementById('restoreFromCloudBtn').addEventListener('click', restoreFromCloud);
+                document.getElementById('genRandomKeyBtn').addEventListener('click', generateRandomKey);
+                document.getElementById('backupToLocalBtn').addEventListener('click', backupToLocal);
+                document.getElementById('restoreFromLocalBtn').addEventListener('click', triggerLocalRestore);
+                document.getElementById('localRestoreFile').addEventListener('change', e => { if (e.target.files[0])
+                        handleLocalRestore(e.target.files[0]); });
+                document.getElementById('backupExpandBtn').addEventListener('click', toggleBackupExpand);
+                document.getElementById('emailSelect').addEventListener('change', function() { if (this.value) window.open(
+                        this.value, '_blank'); });
+                window.addEventListener('resize', () => { checkTagOverflow();
+                    checkBackupOverflow(); });
+                window.addEventListener('click', e => {
                     if (e.target === document.getElementById('editModal')) closeEditModal();
                     if (e.target === document.getElementById('manageTagsModal')) document.getElementById(
                         'manageTagsModal').style.display = 'none';
                     if (e.target === document.getElementById('customModal')) closeCustomModal();
                     if (e.target === document.getElementById('calendarModal')) closeCalendar();
                 });
-                document.getElementById('openAddSiteModalBtn').addEventListener('click', openAddModal);
-                document.getElementById('closeModalBtn').addEventListener('click', closeAddModal);
-                document.getElementById('modalAddSiteBtn').addEventListener('click', addSiteFromModal);
-                document.getElementById('closeEditModalBtn').addEventListener('click', closeEditModal);
-                document.getElementById('saveEditBtn').addEventListener('click', saveEdit);
-                document.getElementById('importFileInput').addEventListener('change', e => { if (e.target.files
-                        .length) handleImport(e.target.files[0]);
-                    e.target.value = ''; });
-                document.getElementById('clearAllSitesBtn').addEventListener('click', clearAllSites);
-                document.getElementById('backupToCloudBtn').addEventListener('click', backupToCloud);
-                document.getElementById('restoreFromCloudBtn').addEventListener('click', restoreFromCloud);
-                document.getElementById('genRandomKeyBtn').addEventListener('click', generateRandomKey);
-                document.getElementById('backupToLocalBtn').addEventListener('click', backupToLocal);
-                document.getElementById('restoreFromLocalBtn').addEventListener('click', triggerLocalRestore);
-                document.getElementById('localRestoreFile').addEventListener('change', e => { if (e.target.files
-                        .length) handleLocalRestore(e.target.files[0]);
-                    e.target.value = ''; });
-                document.getElementById('manageTagsBtn').addEventListener('click', showManageTags);
-                document.getElementById('closeManageTagsBtn').addEventListener('click', () => document.getElementById(
-                    'manageTagsModal').style.display = 'none');
-                const editBtn = document.getElementById('editModeBtn');
-                const delBtn = document.getElementById('deleteModeBtn');
-                editBtn.addEventListener('click', () => { if (editMode) exitEditMode(); else enterEditMode(); });
-                delBtn.addEventListener('click', () => { if (deleteMode) { if (selectedIds.size > 0)
-                        confirmDeleteSelected(); else exitDeleteMode(true); } else enterDeleteMode(); });
-                const sortByName = document.getElementById('sortByNameBtn');
-                const sortByFreq = document.getElementById('sortByFreqBtn');
-                sortByName.addEventListener('click', () => { currentSort = 'name';
-                    sortByName.classList.add('active');
-                    sortByFreq.classList.remove('active');
-                    clearSearch(); });
-                sortByFreq.addEventListener('click', () => { currentSort = 'frequency';
-                    sortByFreq.classList.add('active');
-                    sortByName.classList.remove('active');
-                    clearSearch(); });
-                if (currentSort === 'frequency') { sortByFreq.classList.add('active');
-                    sortByName.classList.remove('active'); } else { sortByName.classList.add('active');
-                    sortByFreq.classList.remove('active'); }
-                const searchInput = document.getElementById('globalSearchInput');
-                searchInput.addEventListener('input', handleGlobalSearchInput);
-                searchInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        const keyword = searchInput.value.trim();
-                        if (keyword) { if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
-                            performWebSearch(keyword); }
-                    }
-                });
-                document.getElementById('engineSearchBtn').addEventListener('click', () => {
-                    const keyword = searchInput.value.trim();
-                    if (keyword) { if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
-                        performWebSearch(keyword); } else showToast('请输入搜索词', 1000);
-                });
-                document.getElementById('emailSelect').addEventListener('change', function() {
-                    const url = this.value;
-                    if (url) { window.open(url, '_blank');
-                        this.value = ''; }
-                });
-                // 智能粘贴监听
-                const urlInput = document.getElementById('modalAddUrl');
-                const nameInput = document.getElementById('modalAddName');
-                if (urlInput) {
-                    urlInput.addEventListener('paste', function(e) {
-                        const pastedText = (e.clipboardData || window.clipboardData).getData('text');
-                        if (!pastedText) return;
-                        const parsed = parseTitleUrl(pastedText);
-                        if (parsed.url) {
-                            this.value = parsed.url;
-                            if (!nameInput.value.trim()) { nameInput.value = parsed.title;
-                                showToast('✅ 已自动分离标题和网址', 1500); } else { showToast('✅ 已提取网址',
-                                1200); }
-                            this.dispatchEvent(new Event('input'));
-                        } else { showToast('未检测到有效网址，请手动输入', 1500); }
-                        e.preventDefault();
-                    });
-                }
+                setTimeout(() => { checkTagOverflow();
+                    checkBackupOverflow(); }, 100);
             }
 
-            // 启动
             (async function init() {
                 await initData();
                 bindEvents();
