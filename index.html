@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>投标导航 | 分类标签 · 云端备份</title>
+    <title>导航|可个性改造为专属导航·云端备份</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js">
     </script>
     <style>
+        /* 样式保持不变，省略...（与之前完全相同） */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: #ecece4;
@@ -1144,13 +1145,18 @@
                 } catch (e) { showToast('解析失败'); }
             }
 
-            const MAX_VALUE_SIZE = 200000;
+            // 分片大小设为 1000 字符，确保每个 URL 不超长
+            const CHUNK_SIZE = 1000;
+
+            // 使用 GET 方式提交数据（符合 textdb.online 的典型用法）
             async function writeTextDB(key, value) {
-                const resp = await fetch(`https://textdb.online/update/?key=${encodeURIComponent(key)}&value=${encodeURIComponent(value)}`, { method: 'POST' });
+                const url = `https://textdb.online/update/?key=${encodeURIComponent(key)}&value=${encodeURIComponent(value)}`;
+                const resp = await fetch(url, { method: 'GET' });
                 if (!resp.ok) throw new Error('网络错误');
                 const json = await resp.json();
                 if (json.status !== 1) throw new Error('API失败');
             }
+
             async function readTextDB(key) {
                 const resp = await fetch(`https://textdb.online/${encodeURIComponent(key)}`);
                 return resp.ok ? await resp.text() : null;
@@ -1162,15 +1168,26 @@
                 const data = JSON.stringify({ sites, tags, clickCounts });
                 const btn = document.getElementById('backupToCloudBtn'); btn.disabled = true; btn.innerHTML = '备份中...';
                 try {
-                    if (data.length <= MAX_VALUE_SIZE) await writeTextDB(key, data);
-                    else {
-                        const chunks = Math.ceil(data.length / 180000);
+                    if (data.length <= CHUNK_SIZE) {
+                        // 单块直接上传
+                        await writeTextDB(key, data);
+                    } else {
+                        // 分片
+                        const chunks = Math.ceil(data.length / CHUNK_SIZE);
                         await writeTextDB(key, JSON.stringify({ batches: chunks }));
-                        for (let i = 0; i < chunks; i++) await writeTextDB(`${key}_batch${i}`, data.substring(i * 180000, (i + 1) * 180000));
+                        for (let i = 0; i < chunks; i++) {
+                            const chunkData = data.substring(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
+                            await writeTextDB(`${key}_batch${i}`, chunkData);
+                        }
                     }
                     showToast('✅ 云端备份成功');
-                } catch (e) { showToast('备份失败'); backupToLocal(); }
-                finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-upload"></i> 分片备份'; }
+                } catch (e) {
+                    showToast('备份失败：' + e.message);
+                    backupToLocal();
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-upload"></i> 分片备份';
+                }
             }
 
             async function restoreFromCloud() {
@@ -1184,19 +1201,36 @@
                     if (master.includes('"batches"')) {
                         const meta = JSON.parse(master);
                         const parts = [];
-                        for (let i = 0; i < meta.batches; i++) parts.push(await readTextDB(`${key}_batch${i}`));
+                        for (let i = 0; i < meta.batches; i++) {
+                            const part = await readTextDB(`${key}_batch${i}`);
+                            if (part === null) throw new Error(`分片 ${i} 缺失`);
+                            parts.push(part);
+                        }
                         fullData = parts.join('');
-                    } else fullData = master;
+                    } else {
+                        fullData = master;
+                    }
                     const restored = JSON.parse(fullData);
                     if (restored.sites && restored.tags) {
                         if (confirm('覆盖当前数据？')) {
-                            sites = restored.sites; tags = restored.tags; if (restored.clickCounts) clickCounts = restored.clickCounts;
-                            saveToLocal(); saveClickCounts(); renderTagBar(); applySortAndRender();
+                            sites = restored.sites;
+                            tags = restored.tags;
+                            if (restored.clickCounts) clickCounts = restored.clickCounts;
+                            saveToLocal();
+                            saveClickCounts();
+                            renderTagBar();
+                            applySortAndRender();
                             showToast('已恢复');
                         }
+                    } else {
+                        showToast('数据格式无效');
                     }
-                } catch (e) { showToast('恢复失败'); }
-                finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-download"></i> 分片恢复'; }
+                } catch (e) {
+                    showToast('恢复失败：' + e.message);
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-download"></i> 分片恢复';
+                }
             }
 
             function generateRandomKey() {
